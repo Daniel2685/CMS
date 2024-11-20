@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/consultation.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-green"></div>
+        <div class="header-gold"></div>
+        <img class="uaemex-logo" src="{% static 'media/logo.png' %}" alt="Logo" />
+    </header>
+
+    <div class="central-container">
+        <div class="nav-bar">
+            <a href="#" onclick="showContent('panel1')">
+                <img class="logo" src="{% static 'media/historiaclinica.png' %}" alt="Historia Clínica logo" />
+                <p>Historia Clínica</p>
+            </a>
+            <a href="#" onclick="showContent('panel2')">
+                <img class="logo" src="{% static 'media/notaevolucion.png' %}" alt="Nota de evolución logo" />
+                <p>Nota de evolución</p>
+            </a>
+            <a href="#" onclick="showContent('panel3')">
+                <img class="logo" src="{% static 'media/receta.png' %}" alt="Receta logo" />
+                <p>Receta</p>
+            </a>
+            <a href="#" onclick="showContent('panel4')">
+                <img class="logo" src="{% static 'media/incapacidad.png' %}" alt="Incapacidad logo" />
+                <p>Incapacidad</p>
+            </a>
+            <a href="#" onclick="showContent('panel5')">
+                <img class="logo" src="{% static 'media/laboratorio.png' %}" alt="Solicitud de laboratorio logo" />
+                <p>Solicitud de laboratorio</p>
+            </a>
+            <a href="#" onclick="showContent('panel6')">
+                <img class="logo" src="{% static 'media/file.png' %}" alt="Solicitud de laboratorio logo" />
+                <p>Ver historial clínico</p>
+            </a>
+        </div>
+        <main>
+            <div class="header-data-container">
+                <img class="logo-hospital" src="{% static 'media/logo2.png' %}" alt="Logo clinica"/>
+                <div class="doctor-data-container">
+                    <p class="title">{{ doctor.name }}</p>
+                    <p class="datum">Servicio: {{ doctor.service }}</p>
+                    <p class="datum">Cédula Profesional: {{ doctor.license1 }}</p>
+                    <p class="datum">Cédula Especialidad: {{ doctor.license2 }}</p>
+                </div>
+            </div>
+
+            <!--AQUI VA EL CÓDIGO PARA LA HISTORIA CLÍNICA-->
+            <div id="panel1" class="tab-content active">
+                <p class="title">Historia clínica</p>
+                <form action="{% url 'process_medical_history' %}" method="post">
+                    {% csrf_token %}
+                    {{ medical_history_form.as_p }}
+                    <button type="submit" id="save-button" title="Guardar">
+                        <img src="{% static 'media/save.png' %}" class="icon-print">
+                    </button>
+                    <button type="button" id="print-button" title="Imprimir">
+                        <img src="{% static 'media/print.png' %}" class="icon-print">
+                    </button>
+                </form>
+            </div>
+
+            <!--AQUÍ VA EL CÓDIGO PARA LA NOTA DE EVOLUCIÓN-->
+            <div id="panel2" class="tab-content">
+                <p class="title">Nota de evolución</p>
+                <form method="post" action="{% url 'process_evolution_note' %}">
+                    {% csrf_token %}
+                    {{ evolution_note_form.as_p }}
+                    <button type="submit" id="save-button" title="Guardar">
+                        <img src="{% static 'media/save.png' %}" class="icon-print">
+                    </button>
+                    <button type="button" id="print-button" title="Imprimir">
+                        <img src="{% static 'media/print.png' %}" class="icon-print">
+                    </button>
+                </form>
+            </div>
+
+            <!--AQUÍ VA EL CÓDIGO PARA LA RECETA-->
+
+            <div id="panel3" class="tab-content">
+                <p class="title">Receta</p>
+                <form method="post" action="{% url 'process_prescription' %}">
+                    {% csrf_token %}
+                    {{ prescription_form.as_p }}
+                    <button type="button" id="print-button" title="Imprimir">
+                        <img src="{% static 'media/print.png' %}" class="icon-print">
+                    </button>
+                </form>
+            </div>
+
+            <!--AQUÍ VA EL CÓDIGO PARA LA INCAPACIDAD-->
+
+            <div id="panel4" class="tab-content">
+                <p class="title">Incapacidad</p>
+                <form action="{% url 'process_incapacity' %}" method="post">
+                    {% csrf_token %}
+                    {{ incapacity_form.as_p }}
+                    <button type="submit" id="save-button" title="Guardar">
+                        <img src="{% static 'media/save.png' %}" class="icon-print">
+                    </button>
+                    <button type="button" id="print-button" title="Imprimir">
+                        <img src="{% static 'media/print.png' %}" class="icon-print">
+                    </button>
+                </form>
+            </div>
+
+            <!--AQUÍ VA EL CÓDIGO PARA LA SOLICITUD DE LABORATORIO-->
+
+            <div id="panel5" class="tab-content">
+                <p class="title">Solicitud de laboratorio</p>
+                <form action="{% url 'process_laboratory_requisition' %}" method="post">
+                    {% csrf_token %}
+                    {{ laboratory_requisition_form.as_p }}
+                    <button type="button" id="print-button" title="Imprimir">
+                        <img src="{% static 'media/print.png' %}" class="icon-print">
+                    </button>
+                </form>
+            </div>
+
+            <!--AQUÍ VA EL CÓDIGO PARA MOSTRAR EL HISTORIAL CLÍNICO DEL PACIENTE-->
+
+            <div id="panel6" class="tab-content">
+                <p class="title">Ver historial clínico</p>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-gold"></div>
+        <div class="footer-green"></div>
+    </footer>
+    <script src="{% static 'scripts/consultation.js' %}"></script>
+</body>
+</html>
