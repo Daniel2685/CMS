@@ -1,0 +1,165 @@
+/* Configuración inicial del body y html */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/*Definimos variables globales de color y tamaños*/
+
+:root {
+    --color-primary: #284C34;
+    --color-secondary: #9C8414;
+    --color-box: #E9E9E9;
+    --color-text: #000000;
+    --font-primary: "Noto Serif", serif;
+    --font-secondary: "Cabin", sans-serif;
+    --font-size-p: 1.2rem;
+    --font-size-H1: 2rem;
+    --font-size-H2: 1rem;
+}
+
+.font-noto-serif {
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+.font-cabin {
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+/* Estructura para darle color y poner el logo al header */
+
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 100%;
+    position: relative;
+}
+
+.header-green{
+    background-color: #284C34;
+    height: 80%;
+    width: 100%;
+}
+
+.header-gold{
+    background-color: #9C8414;
+    height: 20%;
+    width: 100%;
+}
+
+.uaemex-logo{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 10vh;
+    max-width: 10vw;
+    height: auto;
+    width: auto;
+}
+
+.hospital-logo{
+    width: 150px;
+}
+
+/* Similar a lo de arriba para darle color al footer */
+
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 100%;
+    position: relative;
+}
+
+.footer-green{
+    background-color: #284C34;
+    height: 80%;
+    width: 100%;
+}
+
+.footer-gold{
+    background-color: #9C8414;
+    height: 20%;
+    width: 100%;
+}
+
+/* Estoy dando el tamaño y la configuracion para el contenedor central */
+
+.central-container{
+    display: flex;
+    width: 100%;
+    height: 80vh;
+    background-color: #ffff;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: center;
+}
+
+
+/* Aquí va la estructura del panel principal (donde aparecen los formularios) */
+
+form{
+    width: 800px;
+    background-color:#E9E9E9;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.form-group input{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.title{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 40px;
+    margin-bottom: 0;
+}
+
+button {
+    background-color: #284C34;
+    border: none;
+    color: #E9E9E9;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0; /* Ajuste el margen para que no haya espacio adicional fuera */
+    cursor: pointer;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}

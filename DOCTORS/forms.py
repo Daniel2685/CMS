@@ -43,6 +43,59 @@ class RegisterPatientForm(forms.Form):
     email = forms.EmailField(max_length=50, label="Correo electrónico")
     password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
 
+class RegisterScheduleForm(forms.Form):
+    DAYS = [
+        (1, 'Lunes'),
+        (2, 'Martes'),
+        (3, 'Miercoles'),
+        (4, 'Jueves'),
+        (5, 'Viernes'),
+        (6, 'Sábado')
+    ]
+
+    SHIFTS = [
+        (1, 'Matutino'),
+        (2, 'Vespertino')
+    ]
+
+    SERVICES = [
+        (1, "Medicina General"),
+        (2, "Pediatría"),
+        (3, "Ginecología")
+    ]
+
+    dayOfWeek = forms.ChoiceField(choices=DAYS, label='Día de la semana')
+    timeStart = forms.CharField(label='Hora de inicio', max_length=5)
+    timeEnd = forms.CharField(label='Hora de término', max_length=5)
+    timeDuration = forms.CharField(max_length=3, label='Duración')
+    officeID = forms.CharField(max_length=2, label='Número consultorio')
+    shiftID = forms.ChoiceField(choices=SHIFTS, label='Turno')
+    serviceID = forms.ChoiceField(choices=SERVICES, label='Servicio')
+    doctorID = forms.CharField(max_length=36, label='ID Doctor')
+
+
+class RegisterDoctorForm(forms.Form):
+
+    SERVICES = [
+        (1, "Medicina General"),
+        (2, "Pediatría"),
+        (3, "Ginecología")
+    ]
+
+    first_name = forms.CharField(max_length=50, label="Nombre")
+    last_name1 = forms.CharField(max_length=50, label="Apellido Paterno")
+    last_name2 = forms.CharField(max_length=50, label="Apellido Materno")
+    service = forms.ChoiceField(choices=SERVICES, label="Servicio")
+    professional_license = forms.CharField(min_length=8, max_length=8, label="Cédula Profesional") 
+    speciality_license = forms.CharField(min_length=8, max_length=8, label="Cédula de Especialidad")
+    phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
+    email = forms.EmailField(max_length=50, label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput(), label="Contraseña")
+
+class DoctorLoginForm(forms.Form):
+    email = forms.EmailField(label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput(), label="Contraseña")
+    
 
 class MedicalHistoryForm(forms.ModelForm):
     class Meta:
@@ -167,6 +220,6 @@ class PrescriptionForm(forms.Form):
     alergies = forms.CharField(label='Alergias')
     prescription = forms.CharField(label='Prescripción')
 
-class LoginForm(forms.Form):
+class DoctorLoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput())

@@ -4,10 +4,17 @@ import json
 import requests
 
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
-from .forms import MedicalHistoryForm, EvolutionNoteForm, IncapacityForm, LoginForm, LaboratoryRequisitionForm, PrescriptionForm, PatientForm, RegisterPatientForm
+from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm
 
 def index(request):
     return HttpResponse('Bienvenido a la sección de doctores')
+
+def register_doctor(request):
+    if request.method == 'POST':
+        pass
+    else:
+        register_doctor_form = RegisterDoctorForm()
+        return render(request, 'register_doctor.html', {'register_doctor_form' : register_doctor_form})
 
 def register_patient(request):
     if request.method == 'POST':
@@ -33,45 +40,235 @@ def register_patient(request):
         return render(request, 'register_patient.html', {'register_patient_form' : register_patient_form})
 
 
-def login(request):
+def register_schedule(request):
+    auth_token = request.COOKIES.get('authToken')
     if request.method == 'POST':
-        print('Iniciar sesión')
+        register_schedule_form = RegisterScheduleForm(request.POST)
+        if register_schedule_form.is_valid():
+            schedule = register_schedule_form.cleaned_data
+            print(schedule)
+            url_api = "https://api.ax01.dev/v1/schedule"
+            try:
+                headers = {
+                'Authorization': f'Bearer {auth_token}',
+                'Content-Type': 'application/json' 
+                }
+                response = requests.post(url_api, json=schedule, headers=headers)
+                print("Status Code:", response.status_code)
+                print("Response Text:", response.text)
+                if response.status_code == 200:
+                    return HttpResponse('Horario creado con exito')
+                else:
+                    return HttpResponse('No se ha podido crear el horario')
+            except requests.RequestException as e:
+                return HttpResponse('Error al enviar los datos')
+
     else:
-        login_form = LoginForm()
+        register_schedule_form = RegisterScheduleForm()
+        return render(request, 'register_schedule.html', {'register_schedule_form' : register_schedule_form})
+
+
+def login_doctor(request):
+    if request.method == 'POST':
+        login_form = DoctorLoginForm(request.POST)
+        if login_form.is_valid():
+            doctor = login_form.cleaned_data
+            print(doctor)
+            url_api = "https://api.ax01.dev/v1/login"
+            try: 
+                response = requests.post(url_api, json=doctor)
+                print("Status Code:", response.status_code)
+                print("Response Text:", response.text)
+                if response.status_code == 200:
+                    response_json = response.json()
+                    doctor_json = response_json.get('data', {})
+                    token = doctor_json.get('token')
+                    response2 = redirect('home_doctor')
+                    response2.set_cookie('authToken', token, httponly=True, secure=True, samesite='Strict')
+                    return response2
+                else:
+                    return render(request, 'login.html', {'login_form' : login_form})
+            except requests.RequestException as e:
+                return HttpResponse('Error al enviar los datos')
+    else:
+        login_form = DoctorLoginForm()
         return render(request, 'login.html', {'login_form' : login_form})
+    
+def home_doctor(request):
+    token =  request.COOKIES.get('authToken')
+    if token:
+        return render(request, 'home_doctor.html')
+    else:
+        return HttpResponse('Permiso denegado')
+
 
 def provide_consultation(request):
-    medical_history_form = MedicalHistoryForm()
-    evolution_note_form = EvolutionNoteForm()
-    incapacity_form = IncapacityForm()
-    laboratory_requisition_form = LaboratoryRequisitionForm()
-    prescription_form = PrescriptionForm()
-    doc_test = {
-        'name' : 'name placeholder',
-        'service' : 'service placeholder',
-        'license1' : 'license placeholder',
-        'license2' : 'license placeholder'
-    }
-    context = {
-        'medical_history_form' : medical_history_form,
-        'evolution_note_form' : evolution_note_form,
-        'incapacity_form' : incapacity_form,
-        'laboratory_requisition_form' : laboratory_requisition_form,
-        'prescription_form' : prescription_form,
-        'doctor' : doc_test
-    }
-    return render(request, 'consultation.html', context)
+    auth_token = request.COOKIES.get('authToken')
+    if auth_token:
+        initial_data = ''
+        medical_history_status = False
+        try:
+            url_api = "https://api.ax01.dev/v1/medicalh"
+            headers = {
+                'Authorization': f'Bearer {auth_token}',
+                'Content-Type': 'application/json' 
+            }
+            data_send = {'medical_history_id' : 'ASG5-391964'}
+            response = requests.post(url_api, json=data_send, headers=headers)
+            print(headers)
+            print("Status Code:", response.status_code)
+            print("Response Text:", response.text)
+            if response.status_code == 200:
+                print('Datos del paciente obtenidos con éxito')
+                response_json = response.json()
+                medical_history = response_json.get('data', {})
+                medical_history_status = medical_history.get('status')
+                if medical_history_status:
+                    initial_data = {
+                        'date_of_record': medical_history.get('date_of_record'),
+                        'time_of_record': medical_history.get('time_of_record'),
+                        'patient_name': medical_history.get('patient_name'),
+                        'curp': medical_history.get('curp'),
+                        'birth_date': medical_history.get('birth_date'),
+                        'age': medical_history.get('age'),
+                        'gender': medical_history.get('gender'),
+                        'place_of_origin': medical_history.get('place_of_origin'),
+                        'ethnic_group': medical_history.get('ethnic_group'),
+                        'phone_number': medical_history.get('phone_number'),
+                        'address': medical_history.get('address'),
+                        'occupation': medical_history.get('occupation'),
+                        'guardian_name': medical_history.get('guardian_name'),
+                        'family_medical_history': medical_history.get('family_medical_history'),
+                        'non_pathological_history': medical_history.get('non_pathological_history'),
+                        'pathological_history': medical_history.get('pathological_history'),
+                        'gynec_obstetric_history': medical_history.get('gynec_obstetric_history'),
+                        'current_condition': medical_history.get('current_condition'),
+                        'cardiovascular': medical_history.get('cardiovascular'),
+                        'respiratory': medical_history.get('respiratory'),
+                        'gastrointestinal': medical_history.get('gastrointestinal'),
+                        'genitourinary': medical_history.get('genitourinary'),
+                        'hematic_lymphatic': medical_history.get('hematic_lymphatic'),
+                        'endocrine': medical_history.get('endocrine'),
+                        'nervous_system': medical_history.get('nervous_system'),
+                        'musculoskeletal': medical_history.get('musculoskeletal'),
+                        'skin': medical_history.get('skin'),
+                        'body_temperature': medical_history.get('body_temperature'),
+                        'weight': medical_history.get('weight'),
+                        'height': medical_history.get('height'),
+                        'bmi': medical_history.get('bmi'),
+                        'heart_rate': medical_history.get('heart_rate'),
+                        'respiratory_rate': medical_history.get('respiratory_rate'),
+                        'blood_pressure': medical_history.get('blood_pressure'),
+                        'physical': medical_history.get('physical'),
+                        'head': medical_history.get('head'),
+                        'neck_and_chest': medical_history.get('neck_and_chest'),
+                        'abdomen': medical_history.get('abdomen'),
+                        'genital': medical_history.get('genital'),
+                        'extremities': medical_history.get('extremities'),
+                        'previous_results': medical_history.get('previous_results'),
+                        'diagnoses': medical_history.get('diagnoses'),
+                        'pharmacological_treatment': medical_history.get('pharmacological_treatment'),
+                        'prognosis': medical_history.get('prognosis'),
+                        'doctor_name': medical_history.get('doctor_name'),
+                        'medical_license': medical_history.get('medical_license'),
+                        'specialty_license': medical_history.get('specialty_license')
+                    }
+                else:
+                    initial_data = {
+                        'patient_name' : medical_history.get('patient_name'),
+                        'curp' : medical_history.get('curp'),
+                        'gender' : medical_history.get('gender')
+                    }
+            else:
+                print('Error, no existe el paciente')
+        except requests.RequestException as e:
+            print('Error al enviar los datos')
+        medical_history_form = MedicalHistoryForm(initial=initial_data)
+        evolution_note_form = EvolutionNoteForm()
+        incapacity_form = IncapacityForm()
+        laboratory_requisition_form = LaboratoryRequisitionForm()
+        prescription_form = PrescriptionForm()
+        doc_test = {
+            'name' : 'name placeholder',
+            'service' : 'service placeholder',
+            'license1' : 'license placeholder',
+            'license2' : 'license placeholder'
+        }
+        context = {
+            'medical_history_form' : medical_history_form,
+            'evolution_note_form' : evolution_note_form,
+            'incapacity_form' : incapacity_form,
+            'laboratory_requisition_form' : laboratory_requisition_form,
+            'prescription_form' : prescription_form,
+            'doctor' : doc_test
+        }
+        return render(request, 'consultation.html', context)
+    else:
+        return HttpResponse("Permiso denegado")
+    
+    
 
 def process_medical_history(request):
+    auth_token = request.COOKIES.get('authToken')
     medical_history_form = MedicalHistoryForm(request.POST)
     if medical_history_form.is_valid():
         medical_history = medical_history_form.cleaned_data
-        json_data = json.dumps(medical_history)
-        print(json_data)
-        return HttpResponse(json_data, content_type='application/json')
+        complete_medical_history = {
+        "place_of_origin": medical_history.get('place_of_origin'),
+        "ethnic_group": medical_history.get('ethnic_group'),
+        "phone_number": medical_history.get('phone_number'),
+        "address": medical_history.get('address'),
+        "occupation": medical_history.get('occupation'),
+        "guardian_name": medical_history.get('guardian_name'),
+        "family_medical_history": medical_history.get('family_medical_history'),
+        "non_pathological_history": medical_history.get('non_pathological_history'),
+        "pathological_history": medical_history.get('pathological_history'),
+        "gynec_obstetric_history": medical_history.get('gynec_obstetric_history'),
+        "current_condition": medical_history.get('current_condition'),
+        "cardiovascular": medical_history.get('cardiovascular'),
+        "respiratory": medical_history.get('respiratory'),
+        "gastrointestinal": medical_history.get('gastrointestinal'),
+        "genitourinary": medical_history.get('genitourinary'),
+        "hematic_lymphatic": medical_history.get('hematic_lymphatic'),
+        "endocrine": medical_history.get('endocrine'),
+        "nervous_system": medical_history.get('nervous_system'),
+        "musculoskeletal": medical_history.get('musculoskeletal'),
+        "skin": medical_history.get('skin'),
+        "body_temperature": medical_history.get('body_temperature'),
+        "weight": medical_history.get('weight'),
+        "height": medical_history.get('height'),
+        "bmi": medical_history.get('bmi'),
+        "heart_rate": medical_history.get('heart_rate'),
+        "respiratory_rate": medical_history.get('respiratory_rate'),
+        "blood_pressure": medical_history.get('blood_pressure'),
+        "physical": medical_history.get('physical'),
+        "head": medical_history.get('head'),
+        "neck_and_chest": medical_history.get('neck_and_chest'),
+        "abdomen": medical_history.get('abdomen'),
+        "genital": medical_history.get('genital'),
+        "extremities": medical_history.get('extremities'),
+        "previous_results": medical_history.get('previous_results'),
+        "diagnoses": medical_history.get('diagnoses'),
+        "pharmacological_treatment": medical_history.get('pharmacological_treatment'),
+        "prognosis": medical_history.get('prognosis'),
+        "doctor_name": medical_history.get('doctor_name'),
+        "medical_license": medical_history.get('medical_license'),
+        "specialty_license": medical_history.get('specialty_license'),
+        "medical_history_id": medical_history.get('medical_history_id')
+        }
+        headers = {
+            'Authorization': f'Bearer {auth_token}',
+            'Content-Type': 'application/json' 
+        }
+        url_api = "https://api.ax01.dev/v1/medicalhc"
+        response = requests.post(url_api, json=complete_medical_history, headers=headers)
+        if response.status_code == 200:
+            return HttpResponse("Historia médica guardada con éxito")
+        else:
+            return HttpResponse(f"Error al guardar la historia clínica\nStatus code:{response.status_code} Response Text:{response.text}")
     else:
-            # Retornar un error si el formulario no es válido
-            return HttpResponse("Formulario no válido", status=400) 
+            errors = medical_history_form.errors.as_json()
+            return HttpResponse(errors, content_type='application/json', status=400)
 
 def process_evolution_note(request):
     evolution_note_form = EvolutionNoteForm(request.POST)
