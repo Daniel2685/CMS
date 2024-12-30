@@ -1,0 +1,14 @@
+asgiref @ file:///C:/b/abs_ae1n0p_8_w/croot/asgiref_1724072476516/work
+certifi==2024.12.14
+charset-normalizer==3.4.1
+Django @ file:///C:/b/abs_d8jy6px5xv/croot/django_1731616483677/work
+idna==3.10
+pillow==10.4.0
+psycopg==3.2.3
+psycopg2==2.9.10
+PyMySQL==1.1.1
+requests==2.32.3
+sqlparse==0.5.1
+typing_extensions @ file:///C:/b/abs_0ffjxtihug/croot/typing_extensions_1734714875646/work
+tzdata==2024.2
+urllib3==2.3.0
