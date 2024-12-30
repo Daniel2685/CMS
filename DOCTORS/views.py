@@ -1,3 +1,5 @@
+import datetime
+from datetime import timedelta, datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 import json
@@ -46,14 +48,41 @@ def register_schedule(request):
         register_schedule_form = RegisterScheduleForm(request.POST)
         if register_schedule_form.is_valid():
             schedule = register_schedule_form.cleaned_data
+            timeDuration = datetime.strptime(schedule.get('timeDuration'), '%H:%M')
+            duration = timeDuration.hour * 60 + timeDuration.minute
+            timeStart = datetime.strptime(schedule.get('timeStart'), '%H:%M')
+            timeEnd = datetime.strptime(schedule.get('timeEnd'), '%H:%M')
+            timeSlots = []
+            currentTime = timeStart
+            while currentTime + timedelta(minutes=duration) <= timeEnd:
+                nextTime = currentTime + timedelta(minutes=duration)
+                timeSlots.append(f"{currentTime.strftime('%H:%M')} - {nextTime.strftime('%H:%M')}")
+                currentTime = nextTime
+            selectedDays = [int(day) for day in schedule.get('selectedDays')]
+            for day in selectedDays:
+                print(day)
+            print(timeSlots)
             print(schedule)
+
             url_api = "https://api.ax01.dev/v1/schedule"
             try:
                 headers = {
                 'Authorization': f'Bearer {auth_token}',
                 'Content-Type': 'application/json' 
                 }
-                response = requests.post(url_api, json=schedule, headers=headers)
+                schedule_json = {
+                    'selectedDays' : selectedDays,
+                    'timeStart' : schedule.get('timeStart'),
+                    'timeEnd' : schedule.get('timeEnd'),
+                    'timeDuration' : schedule.get('timeDuration'),
+                    'shiftID' : schedule.get('shiftID'),
+                    'serviceID' : schedule.get('serviceID'),
+                    'doctorID' : schedule.get('doctorID'),
+                    'officeID' : schedule.get('officeID'),
+                    'timeSlots' : timeSlots
+                }
+                print(schedule_json)
+                response = requests.post(url_api, json=schedule_json, headers=headers)
                 print("Status Code:", response.status_code)
                 print("Response Text:", response.text)
                 if response.status_code == 200:

@@ -43,14 +43,12 @@ class RegisterPatientForm(forms.Form):
     email = forms.EmailField(max_length=50, label="Correo electrónico")
     password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
 
+
 class RegisterScheduleForm(forms.Form):
-    DAYS = [
-        (1, 'Lunes'),
-        (2, 'Martes'),
-        (3, 'Miercoles'),
-        (4, 'Jueves'),
-        (5, 'Viernes'),
-        (6, 'Sábado')
+    DURATIONS = [
+        ('01:00', '1 hora'),
+        ('00:45', '45 minutos'),
+        ('00:30', '30 minutos')
     ]
 
     SHIFTS = [
@@ -64,14 +62,39 @@ class RegisterScheduleForm(forms.Form):
         (3, "Ginecología")
     ]
 
-    dayOfWeek = forms.ChoiceField(choices=DAYS, label='Día de la semana')
-    timeStart = forms.CharField(label='Hora de inicio', max_length=5)
-    timeEnd = forms.CharField(label='Hora de término', max_length=5)
-    timeDuration = forms.CharField(max_length=3, label='Duración')
+    HOURS = [(f"{hora:02d}:00", f"{hora:02d}:00") for hora in range(7, 21)]
+
+    DAYS = [
+    (1, 'Lunes'),
+    (2, 'Martes'),
+    (3, 'Miércoles'),
+    (4, 'Jueves'),
+    (5, 'Viernes'),
+    (6, 'Sábado'),
+    ]
+
+    selectedDays =  forms.MultipleChoiceField(choices=DAYS, widget=forms.CheckboxSelectMultiple, label='Días de la semana')
+    timeStart = forms.ChoiceField(choices=HOURS, label='Hora de inicio')
+    timeEnd = forms.ChoiceField(choices=HOURS, label='Hora de término')
+    timeDuration = forms.ChoiceField(choices=DURATIONS, label='Duración')
     officeID = forms.CharField(max_length=2, label='Número consultorio')
     shiftID = forms.ChoiceField(choices=SHIFTS, label='Turno')
     serviceID = forms.ChoiceField(choices=SERVICES, label='Servicio')
     doctorID = forms.CharField(max_length=36, label='ID Doctor')
+
+'''
+
+class RegisterScheduleForm(forms.Form):
+    selectedDays #Esto es una lista de enteros que pueden ir de 1 a 7 para los dias de la semana
+    timeStart #Esto es para definir el tiempo de inicio
+    timeEnd #Esto es para definir el tiempo de finalizacion
+    timeDuration #Esto es para definir la duracion
+    shiftID #numero del 1 al 2 para ver si es matutino o vespertino
+    serviceID #esto simplemente es del servicio
+    doctorID #el id del doctor
+    officeID #el id del consultorio
+    timeSlots #los tiempos generados, lista de strings de fecha con formato ["09:00 - 10:00", "10:00 - 11:00"]
+'''
 
 
 class RegisterDoctorForm(forms.Form):

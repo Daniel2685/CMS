@@ -20,21 +20,24 @@
         <form action="{% url 'register_schedule' %}" method="post">
             <img class="hospital-logo" src="{% static 'media/logo2.png' %}" alt="Logo" />
             {% csrf_token %}
-            <div class="form-group">
-                Día de la semana
-                {{register_schedule_form.dayOfWeek}}
-            </div>
+            <h3>Registrar nuevo horario</h1>
+                <div class="form-group">
+                    Días de la semana
+                    <div class="checkbox-container">
+                        {{ register_schedule_form.selectedDays }}
+                    </div>
+                </div>
             <div class="form-group">
                 Hora de inicio
                 {{register_schedule_form.timeStart}}
             </div>
             <div class="form-group">
-                Duración
-                {{register_schedule_form.timeDuration}}
-            </div>
-            <div class="form-group">
                 Hora de término
                 {{register_schedule_form.timeEnd}}
+            </div>
+            <div class="form-group">
+                Duración
+                {{register_schedule_form.timeDuration}}
             </div>
             <div class="form-group">
                 Número de consultorio

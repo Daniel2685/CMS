@@ -134,6 +134,24 @@ form{
     box-sizing: border-box;
 }
 
+.checkbox-container {
+    display: flex;
+    flex-direction: row;   
+    gap: 15px; 
+    margin-top: 10px;
+    flex-wrap: nowrap; .checkbox-container label {
+        display: flex;
+        align-items: center;
+        font-size: 14px; 
+    }
+}
+
+.checkbox-container label {
+    display: flex;
+    align-items: center;
+    font-size: 14px; 
+}
+
 .form-group input{
     width: 100%;
     box-sizing: border-box;
@@ -163,3 +181,4 @@ button {
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
 }
+
