@@ -43,6 +43,68 @@ class RegisterPatientForm(forms.Form):
     email = forms.EmailField(max_length=50, label="Correo electrónico")
     password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
 
+def no_blank_validator(value):
+    if not value.strip():
+        raise ValidationError("Este campo no puede estar vacío ni contener solo espacios en blanco.")
+
+class RegisterSuperadminForm(forms.Form):
+    SEX = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino')
+    ]
+    first_name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
+    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
+    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
+    curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')
+    sex = forms.ChoiceField(choices=SEX, label='Sexo')
+    phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
+    email = forms.EmailField(max_length=50, label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+
+class RegisterAdminForm(forms.Form):
+    SEX = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino')
+    ]
+    first_name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
+    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
+    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
+    curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')
+    sex = forms.ChoiceField(choices=SEX, label='Sexo')
+    phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
+    email = forms.EmailField(max_length=50, label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+
+class RegisterDoctorForm(forms.Form):
+    SEX = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino')
+    ]
+    dependency_id = forms.ChoiceField(choices=[], label='Dependencia')
+    medical_license = forms.CharField(min_length=8, max_length=8, label="Cédula Profesional")
+    specialty_id = forms.ChoiceField(choices=[], label="Especialidad")
+    name = forms.CharField(max_length=50, validators=[no_blank_validator], label="Nombre")
+    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Paterno")
+    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Materno")
+    #speciality_license = forms.CharField(min_length=8, max_length=8, label="Cédula de Especialidad")
+    sex = forms.ChoiceField(choices=SEX, label='Sexo')
+    phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
+    email = forms.EmailField(max_length=50, label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+
+class RegisterReceptionistForm(forms.Form):
+    SEX = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino')
+    ]
+    first_name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
+    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
+    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
+    curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')
+    sex = forms.ChoiceField(choices=SEX, label='Sexo')
+    phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
+    email = forms.EmailField(max_length=50, label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
 
 class RegisterScheduleForm(forms.Form):
     DURATIONS = [
@@ -96,24 +158,6 @@ class RegisterScheduleForm(forms.Form):
     timeSlots #los tiempos generados, lista de strings de fecha con formato ["09:00 - 10:00", "10:00 - 11:00"]
 '''
 
-
-class RegisterDoctorForm(forms.Form):
-
-    SERVICES = [
-        (1, "Medicina General"),
-        (2, "Pediatría"),
-        (3, "Ginecología")
-    ]
-
-    first_name = forms.CharField(max_length=50, label="Nombre")
-    last_name1 = forms.CharField(max_length=50, label="Apellido Paterno")
-    last_name2 = forms.CharField(max_length=50, label="Apellido Materno")
-    service = forms.ChoiceField(choices=SERVICES, label="Servicio")
-    professional_license = forms.CharField(min_length=8, max_length=8, label="Cédula Profesional") 
-    speciality_license = forms.CharField(min_length=8, max_length=8, label="Cédula de Especialidad")
-    phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
-    email = forms.EmailField(max_length=50, label="Correo electrónico")
-    password = forms.CharField(widget=forms.PasswordInput(), label="Contraseña")
 
 class DoctorLoginForm(forms.Form):
     email = forms.EmailField(label="Correo electrónico")

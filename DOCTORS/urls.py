@@ -11,7 +11,10 @@ urlpatterns = [
     path('process_incapacity', views.process_incapacity, name='process_incapacity'),
     path('process_laboratory_requisition', views.process_laboratory_requisition, name='process_laboratory_requisition'),
     path('process_prescription', views.process_prescription, name='process_prescription'),
+    path('register_superadmin', views.register_superadmin, name='register_superadmin'),
+    path('register_admin', views.register_admin, name='register_admin'),
     path('register_patient', views.register_patient, name='register_patient'),
     path('register_doctor', views.register_doctor, name='register_doctor'),
+    path('register_receptionist', views.register_receptionist, name='register_receptionist'),
     path('register_schedule', views.register_schedule, name='register_schedule'),
 ]

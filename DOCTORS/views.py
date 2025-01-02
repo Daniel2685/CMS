@@ -6,17 +6,112 @@ import json
 import requests
 
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
-from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm
+from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm
 
 def index(request):
     return HttpResponse('Bienvenido a la sección de doctores')
 
-def register_doctor(request):
+def register_superadmin(request):
     if request.method == 'POST':
-        pass
+        form = RegisterSuperadminForm(request.POST)
+        if form.is_valid():
+            superadmin = form.cleaned_data
+            url_api = "https://api.ax01.dev/v1/patients"
+            try:
+                response = requests.post(url_api, json=superadmin)
+                print("Status Code:", response.status_code)
+                if response.status_code == 200:
+                    return HttpResponse('Registro exitoso')
+                else:
+                    return HttpResponse('Registro fallido')
+            except requests.RequestException as e:
+                    return HttpResponse('Error al enviar los datos')
+        else:
+            return render(request, 'register_superadmin.html', {'register_superadmin_form': form})
     else:
-        register_doctor_form = RegisterDoctorForm()
-        return render(request, 'register_doctor.html', {'register_doctor_form' : register_doctor_form})
+        form = RegisterSuperadminForm()
+    return render(request, 'register_superadmin.html', {'register_superadmin_form': form})
+
+def register_admin(request):
+    if request.method == 'POST':
+        form = RegisterAdminForm(request.POST)
+        if form.is_valid():
+            admin = form.cleaned_data
+            url_api = "https://api.ax01.dev/v1/patients"
+            try:
+                response = requests.post(url_api, json=admin)
+                print("Status Code:", response.status_code)
+                if response.status_code == 200:
+                    return HttpResponse('Registro exitoso')
+                else:
+                    return HttpResponse('Registro fallido')
+            except requests.RequestException as e:
+                    return HttpResponse('Error al enviar los datos')
+        else:
+            return render(request, 'register_admin.html', {'register_admin_form': form})
+    else:
+        form = RegisterAdminForm()
+    return render(request, 'register_admin.html', {'register_admin_form' : form})
+
+def register_doctor(request):
+    SPECIALTIES = [
+            (1, 'Medicina general'),
+            (2, 'Terapia física'),
+            (3, 'Pediatría'),
+    ]
+    DEPENDENCIES = [
+        (1, "SUTESUAEM"),
+        (2, "FAAPA"),
+        (3, "ALUMNO"),
+        (4, "CONFIANZA"),
+        (5, "EXTERNO")
+    ]   
+    if request.method == 'POST':
+        form = RegisterDoctorForm(request.POST)
+        form.fields['specialty_id'].choices = SPECIALTIES
+        form.fields['dependency_id'].choices = DEPENDENCIES
+        if form.is_valid():
+            doctor = form.cleaned_data
+            url_api = "https://api.ax01.dev/v1/doctors"
+            try:
+                response = requests.post(url_api, json=doctor)
+                print("Status Code:", response.status_code)
+                if response.status_code == 200:
+                    return HttpResponse('Registro exitoso')
+                else:
+                    return HttpResponse('Registro fallido')
+            except requests.RequestException as e:
+                return HttpResponse('Error al enviar los datos')
+        else:
+            return render(request, 'register_doctor.html', {'register_doctor_form': form})
+    else:
+        #Estas especialidades y dependencias las obtendríamos de la base de datos
+        form = RegisterDoctorForm()
+        form.fields['specialty_id'].choices = SPECIALTIES
+        form.fields['dependency_id'].choices = DEPENDENCIES
+        return render(request, 'register_doctor.html', {'register_doctor_form' : form})
+
+
+def register_receptionist(request):
+    if request.method == 'POST':
+        form = RegisterReceptionistForm(request.POST)
+        if form.is_valid():
+            recpetionist = form.cleaned_data
+            url_api = "https://api.ax01.dev/v1/patients"
+            try:
+                response = requests.post(url_api, json=recpetionist)
+                print("Status Code:", response.status_code)
+                if response.status_code == 200:
+                    return HttpResponse('Registro exitoso')
+                else:
+                    return HttpResponse('Registro fallido')
+            except requests.RequestException as e:
+                    return HttpResponse('Error al enviar los datos')
+        else:
+            return render(request, 'register_receptionist.html', {'register_receptionist_form': form})
+    else:
+        form = RegisterReceptionistForm()
+    return render(request, 'register_receptionist.html', {'register_receptionist_form' : form})
 
 def register_patient(request):
     if request.method == 'POST':
