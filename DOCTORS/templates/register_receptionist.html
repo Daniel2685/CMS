@@ -4,13 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Recepcionista</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/register_forms.css' %}">
 </head>
 <body>
-    <h1>Registro Recepcionista</h1>
-    <form action="{% url 'register_receptionist' %}" method="post">
-        {% csrf_token %}
-        {{ register_receptionist_form.as_p }}
-        <button type="submit">Registrar</button>
-    </form>
+    <!-- Encabezado -->
+    <header>
+        <div class="header-green"></div>
+        <div class="header-gold"></div>
+        <img class="uaemex-logo" src="{% static 'media/logo.png' %}" alt="Logo" />
+    </header>
+
+    <!-- Contenedor central con el formulario -->
+    <main>
+        <h1>Registro de Recepcionista</h1>
+        <form action="{% url 'register_receptionist' %}" method="post">
+            <img class="hospital-logo" src="{% static 'media/logo2.png' %}" alt="Logo" />
+            {% csrf_token %}
+            <div class="form-group">
+                {% for field in register_receptionist_form %}
+                <div class="form-row">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit">Registrar</button>
+        </form>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="footer-gold"></div>
+        <div class="footer-green"></div>
+    </footer>
 </body>
 </html>

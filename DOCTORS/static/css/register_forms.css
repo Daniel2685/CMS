@@ -1,0 +1,262 @@
+/* Configuración inicial del body y html */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Definimos variables globales de color y tamaños */
+:root {
+    --color-primary: #284C34;
+    --color-secondary: #9C8414;
+    --color-box: #E9E9E9;
+    --color-text: #000000;
+    --font-primary: "Noto Serif", serif;
+    --font-secondary: "Cabin", sans-serif;
+    --font-size-p: 1.2rem;
+    --font-size-H1: 2rem;
+    --font-size-H2: 1rem;
+}
+
+.font-noto-serif {
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+.font-cabin {
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+/* Estructura para darle color y poner el logo al header */
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 100%;
+    position: relative;
+}
+
+.header-green {
+    background-color: #284C34;
+    height: 80%;
+    width: 100%;
+}
+
+.header-gold {
+    background-color: #9C8414;
+    height: 20%;
+    width: 100%;
+}
+
+.uaemex-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 6vh; /* Ajustado para pantallas pequeñas */
+    max-width: 6vw; /* Ajustado para pantallas pequeñas */
+    height: auto;
+    width: auto;
+}
+
+/* Similar a lo de arriba para darle color al footer */
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 100%;
+    position: relative;
+}
+
+.footer-green {
+    background-color: #284C34;
+    height: 80%;
+    width: 100%;
+}
+
+.footer-gold {
+    background-color: #9C8414;
+    height: 20%;
+    width: 100%;
+}
+
+.central-container {
+    display: flex;
+    width: 100%;
+    height: 80vh;
+}
+
+form {
+    width: 400px;
+    background-color: #E9E9E9;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+main {
+    background-color: #ffff;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Contenedor del formulario con Grid */
+.form-group {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* 150px para los labels, el resto para los inputs */
+    gap: 10px; /* Espacio entre label e input */
+    margin-bottom: 20px;
+    align-items: center; /* Alinea los elementos verticalmente al centro */
+}
+
+/* Establece un ancho fijo para los labels */
+.form-group label {
+    text-align: left;
+    font-size: 1rem;
+    width: 150px; /* Fijo el ancho de los labels */
+    margin: 0; /* Elimina márgenes adicionales */
+}
+
+/* Establece el ancho de los inputs y selects */
+.form-group input, .form-group select {
+    width: 100%; /* Los inputs ocupan todo el espacio restante */
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+
+button {
+    background-color: #284C34;
+    border: none;
+    color: #E9E9E9;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #9C8414;
+}
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 1024px) {
+    .uaemex-logo {
+        max-height: 5vh;  /* Ajuste más pequeño del logo */
+        max-width: 5vw;   /* Ajuste más pequeño del logo */
+    }
+
+    form {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .form-group {
+        width: 90%;
+    }
+
+    main h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        height: 8vh;
+    }
+
+    footer {
+        height: 8vh;
+    }
+
+    .uaemex-logo {
+        max-height: 4vh;  /* Logo más pequeño para pantallas pequeñas */
+        max-width: 4vw;   /* Logo más pequeño para pantallas pequeñas */
+    }
+
+    form {
+        width: 85%;
+        padding: 10px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    main h1 {
+        font-size: 1.3rem;
+    }
+
+    .hospital-logo {
+        width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .uaemex-logo {
+        max-height: 4vh;
+        max-width: 4vw;
+    }
+
+    form {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    main h1 {
+        font-size: 1.2rem;
+    }
+}
+
+.hospital-logo {
+    width: 150px;  /* Tamaño por defecto para pantallas grandes */
+    height: auto;
+}
+
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 1024px) {
+    .hospital-logo {
+        width: 120px;  /* Reducción de tamaño para pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .hospital-logo {
+        width: 100px;  /* Reducción de tamaño para pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    .hospital-logo {
+        width: 80px;  /* Aún más pequeño para móviles */
+    }
+}

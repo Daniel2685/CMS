@@ -14,7 +14,7 @@ body, html {
     --color-text: #000000;
     --font-primary: "Noto Serif", serif;
     --font-secondary: "Cabin", sans-serif;
-    --font-size-p: 1.2rem;
+    --font-size-p: 1.2rem; 
     --font-size-H1: 2rem;
     --font-size-H2: 1rem;
 }
@@ -74,7 +74,6 @@ header {
     width: 150px;
 }
 
-/* Similar a lo de arriba para darle color al footer */
 
 footer {
     display: flex;
@@ -98,16 +97,12 @@ footer {
     width: 100%;
 }
 
-/* Estoy dando el tamaño y la configuracion para el contenedor central */
 
 .central-container{
     display: flex;
     width: 100%;
     height: 80vh;
 }
-
-
-/* Aquí va la estructura del panel principal (donde aparecen los formularios) */
 
 main{
     background-color: #ffff;
@@ -144,7 +139,6 @@ form{
     box-sizing: border-box;
 }
 
-
 .title{
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 40px;
@@ -167,4 +161,8 @@ button {
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
+}
+
+button:hover {
+    background-color: #9C8414;
 }
