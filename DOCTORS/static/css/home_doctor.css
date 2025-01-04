@@ -168,3 +168,7 @@ button {
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
 }
+
+button:hover {
+    background-color: #9C8414;
+}
