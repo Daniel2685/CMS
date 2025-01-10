@@ -162,8 +162,61 @@ class RegisterScheduleForm(forms.Form):
 class DoctorLoginForm(forms.Form):
     email = forms.EmailField(label="Correo electrónico")
     password = forms.CharField(widget=forms.PasswordInput(), label="Contraseña")
-    
 
+
+class MedicalHistoryForm(forms.Form):
+    id = forms.CharField(max_length=12, required=True)
+    date_of_record = forms.DateField(required=False, label='Fecha de registro')
+    time_of_record = forms.TimeField(required=False, label='Hora de registro')
+    patient_name = forms.CharField(max_length=50, required=True, label='Nombre del paciente')
+    curp = forms.CharField(max_length=18, required=True, label='CURP')
+    birth_date = forms.DateField(required=False, label='Fecha de nacimiento')
+    age = forms.CharField(max_length=3, required=False, label='Edad')
+    gender = forms.CharField(max_length=10, required=True, label='Género')
+    place_of_origin = forms.CharField(max_length=10, required=False, label='Lugar de origen')
+    ethnic_group = forms.CharField(max_length=20, required=False, label='Grupo étnico')
+    phone_number = forms.CharField(max_length=10, required=False, label='Número de teléfono')
+    other_affiliation = forms.ChoiceField(choices=[], label='Derechohabiencia')
+    address = forms.CharField(max_length=50, required=False, label='Dirección')
+    occupation = forms.CharField(max_length=20, required=False, label='Ocupación')
+    guardian_name = forms.CharField(max_length=50, required=False, label='Nombre del tutor')
+    family_medical_history = forms.CharField(max_length=100, required=False, label='Antecedentes médicos familiares')
+    non_pathological_history = forms.CharField(max_length=100, required=False, label='Antecedentes no patológicos')
+    pathological_history = forms.CharField(max_length=100, required=False, label='Antecedentes patológicos')
+    gynec_obstetric_history = forms.CharField(max_length=100, required=False, label='Antecedentes gineco-obstétricos')
+    current_condition = forms.CharField(max_length=100, required=False, label='Condición actual')
+    cardiovascular = forms.CharField(max_length=100, required=False, label='Sistema cardiovascular')
+    respiratory = forms.CharField(max_length=100, required=False, label='Sistema respiratorio')
+    gastrointestinal = forms.CharField(max_length=100, required=False, label='Sistema gastrointestinal')
+    genitourinary = forms.CharField(max_length=100, required=False, label='Sistema genitourinario')
+    hematic_lymphatic = forms.CharField(max_length=100, required=False, label='Sistema hemático y linfático')
+    endocrine = forms.CharField(max_length=100, required=False, label='Sistema endocrino')
+    nervous_system = forms.CharField(max_length=100, required=False, label='Sistema nervioso')
+    musculoskeletal = forms.CharField(max_length=100, required=False, label='Sistema musculoesquelético')
+    skin = forms.CharField(max_length=100, required=False, label='Piel')
+    body_temperature = forms.CharField(max_length=10, required=False, label='Temperatura corporal')
+    weight = forms.CharField(max_length=5, required=False, label='Peso')
+    height = forms.CharField(max_length=10, required=False, label='Altura')
+    bmi = forms.CharField(max_length=10, required=False, label='Índice de masa corporal (IMC)')
+    heart_rate = forms.CharField(max_length=10, required=False, label='Frecuencia cardíaca')
+    respiratory_rate = forms.CharField(max_length=10, required=False, label='Frecuencia respiratoria')
+    blood_pressure = forms.CharField(max_length=10, required=False, label='Presión arterial')
+    physical = forms.CharField(max_length=100, required=False, label='Examen físico')
+    head = forms.CharField(max_length=100, required=False, label='Cabeza')
+    neck_and_chest = forms.CharField(max_length=100, required=False, label='Cuello y tórax')
+    abdomen = forms.CharField(max_length=100, required=False, label='Abdomen')
+    genital = forms.CharField(max_length=100, required=False, label='Genitales')
+    extremities = forms.CharField(max_length=100, required=False, label='Extremidades')
+    previous_results = forms.CharField(max_length=100, required=False, label='Resultados anteriores')
+    diagnoses = forms.CharField(max_length=100, required=False, label='Diagnósticos')
+    pharmacological_treatment = forms.CharField(max_length=100, required=False, label='Tratamiento farmacológico')
+    prognosis = forms.CharField(max_length=100, required=False, label='Pronóstico')
+    doctor_name = forms.CharField(max_length=50, required=False, label='Nombre del médico')
+    medical_license = forms.CharField(max_length=10, required=False, label='Cédula médica')
+    specialty_license = forms.CharField(max_length=10, required=False, label='Cédula de especialidad')
+
+    
+'''
 class MedicalHistoryForm(forms.ModelForm):
     class Meta:
         model = MedicalHistory
@@ -218,6 +271,7 @@ class MedicalHistoryForm(forms.ModelForm):
             'medical_license': 'Cédula médica',
             'specialty_license': 'Cédula de especialidad',
         }
+'''
 
 class EvolutionNoteForm(forms.ModelForm):
     class Meta:
