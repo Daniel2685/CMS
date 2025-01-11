@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Superadministrador</title>
+    {% load static %}
 </head>
 <body>
     <h1>Registro Superadministrador</h1>
@@ -12,5 +13,6 @@
         {{ register_superadmin_form.as_p }}
         <button type="submit">Registrar</button>
     </form>
+    <script src="{% static 'scripts/passwords.js' %}"></script>
 </body>
 </html>

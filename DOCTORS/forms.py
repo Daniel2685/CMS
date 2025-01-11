@@ -19,7 +19,6 @@ class PatientForm(forms.ModelForm):
         }
 
 class RegisterPatientForm(forms.Form):
-
     DEPENDENCIES = [
         (1, "SUTESUAEM"),
         (2, "FAAPA"),
@@ -27,12 +26,10 @@ class RegisterPatientForm(forms.Form):
         (4, "CONFIANZA"),
         (5, "EXTERNO")
     ]
-
     SEX = [
         ("M", "Masculino"),
         ("F", "Femenino")
     ]
-
     dependency_id = forms.ChoiceField(choices=DEPENDENCIES, label="Dependencia")
     name = forms.CharField(max_length=50, label="Nombre")
     lastname1 = forms.CharField(max_length=50, label="Apellido Paterno")
@@ -41,7 +38,14 @@ class RegisterPatientForm(forms.Form):
     sex = forms.ChoiceField(choices=SEX, label="Sexo")
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
     email = forms.EmailField(max_length=50, label="Correo electrónico")
-    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Contraseña"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Confirmar contraseña"
+    )
 
 def no_blank_validator(value):
     if not value.strip():
@@ -59,7 +63,14 @@ class RegisterSuperadminForm(forms.Form):
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
     email = forms.EmailField(max_length=50, label="Correo electrónico")
-    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Contraseña"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Confirmar contraseña"
+    )
 
 class RegisterAdminForm(forms.Form):
     SEX = [
@@ -73,7 +84,14 @@ class RegisterAdminForm(forms.Form):
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
     email = forms.EmailField(max_length=50, label="Correo electrónico")
-    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Contraseña"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Confirmar contraseña"
+    )
 
 class RegisterDoctorForm(forms.Form):
     SEX = [
@@ -90,7 +108,14 @@ class RegisterDoctorForm(forms.Form):
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
     email = forms.EmailField(max_length=50, label="Correo electrónico")
-    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Contraseña"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Confirmar contraseña"
+    )
 
 class RegisterReceptionistForm(forms.Form):
     SEX = [
@@ -104,7 +129,14 @@ class RegisterReceptionistForm(forms.Form):
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
     email = forms.EmailField(max_length=50, label="Correo electrónico")
-    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Contraseña"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'password-field'}), 
+        label="Confirmar contraseña"
+    )
 
 class RegisterScheduleForm(forms.Form):
     DURATIONS = [
