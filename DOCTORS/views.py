@@ -16,7 +16,7 @@ def register_superadmin(request):
     if user_data_cookie:
         user_data = json.loads(user_data_cookie)
         role = int(user_data.get('role'))
-        if role == 1:  # Permitir solo si el rol es 1 (Superadmin)
+        if role == 1:
             if request.method == 'POST':
                 form = RegisterSuperadminForm(request.POST)
                 if form.is_valid():
@@ -126,7 +126,7 @@ def register_receptionist(request):
     if user_data_cookie:
         user_data = json.loads(user_data_cookie)
         role = int(user_data.get('role'))
-        if role == 1 or role == 2:  # Permitir solo si el rol es 1 (Superadmin) o 2 (Admin)
+        if role == 1 or role == 2: 
             if request.method == 'POST':
                 form = RegisterReceptionistForm(request.POST)
                 if form.is_valid():
@@ -157,7 +157,7 @@ def register_patient(request):
     if user_data_cookie:
         user_data = json.loads(user_data_cookie)
         role = int(user_data.get('role'))
-        if role == 1 or role == 2:  # Permitir solo si el rol es 1 (Superadmin) o 2 (Admin)
+        if role == 1 or role == 2: 
             if request.method == 'POST':
                 print("registro")
                 register_patient_form = RegisterPatientForm(request.POST)
@@ -193,8 +193,7 @@ def register_schedule(request):
         user_data = json.loads(user_data_cookie)
         role = int(user_data.get('role'))
         auth_token = user_data.get('token')  # Obtener el token de autorización desde la cookie
-
-        if role in [1, 2, 4]:  # Permitir solo si el rol es 1 (Superadmin), 2 (Admin) o 4 (Recepcionista)
+        if role in [1, 2, 4]: 
             if request.method == 'POST':
                 register_schedule_form = RegisterScheduleForm(request.POST)
                 if register_schedule_form.is_valid():
