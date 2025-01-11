@@ -6,7 +6,7 @@ import json
 import requests
 
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
-from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm
+from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm, LoginForm
 
 def index(request):
     return HttpResponse('Bienvenido a la sección de doctores')
@@ -192,6 +192,32 @@ def register_schedule(request):
         return render(request, 'register_schedule.html', {'register_schedule_form' : register_schedule_form})
 
 
+def login_admin(request):
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            admin = login_form.cleaned_data
+            url_api = 'https://api.ax01.dev/v1/login'
+            try:
+                response = requests.post(url_api, json=admin)
+                print('Status Code: ', response.status_code)
+                print('Response Text: ', response.text)
+                if response.status_code == 200:
+                    response_json = response.json()
+                    admin_json = response_json.get('data', {})
+                    token = doctor_json.get('token')
+                    response2 = redirect('home_admin')
+                    response2.set_cookie('authToken', token, httponly=True, secure=True, samesite='Strict')
+                    return response2;
+                else:
+                    return render(request, 'login_admin.html', {'login_form' : login_form})
+            except requests.RequestException as e:
+                return HttpResponse('Error al enviar los datos')
+    else:
+        login_form = LoginForm()
+        return render(request, 'login_admin.html', {'login_form' : login_form})
+
+
 def login_doctor(request):
     if request.method == 'POST':
         login_form = DoctorLoginForm(request.POST)
@@ -217,14 +243,31 @@ def login_doctor(request):
     else:
         login_form = DoctorLoginForm()
         return render(request, 'login.html', {'login_form' : login_form})
+
+
+def home_admin(request):
+    return render(request, 'home_admin.html')
+    '''
+    Esto se tiene que validar con el servidor de billy
+    token = request.COOKIES.get('authToken')
+    if token:
+        return HttpResponse('Bienvenido administrador')
+        #return render(request, 'home_admin.html')
+    else:
+        return HttpResponse('Permiso denegado')
+    '''
+
     
 def home_doctor(request):
+    return render(request, 'home_doctor.html')
+    '''
+    Esto se tiene que validar con el servidor de billy
     token =  request.COOKIES.get('authToken')
     if token:
         return render(request, 'home_doctor.html')
     else:
         return HttpResponse('Permiso denegado')
-
+    '''
 
 def provide_consultation(request):
     auth_token = request.COOKIES.get('authToken')

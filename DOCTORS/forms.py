@@ -163,6 +163,10 @@ class DoctorLoginForm(forms.Form):
     email = forms.EmailField(label="Correo electrónico")
     password = forms.CharField(widget=forms.PasswordInput(), label="Contraseña")
 
+class LoginForm(forms.Form):
+    email = forms.EmailField(label="Correo electrónico")
+    password = forms.CharField(widget=forms.PasswordInput(), label="Contraseña")
+
 
 class MedicalHistoryForm(forms.Form):
     id = forms.CharField(max_length=12, required=True)

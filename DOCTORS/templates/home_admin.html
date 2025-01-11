@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'media/logo.png' %}" type="image/x-icon">
+    <title>Inicio Doctores</title>
+    <link rel="stylesheet" href="{% static 'css/home_doctor.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-green"></div>
+        <div class="header-gold"></div>
+        <img class="uaemex-logo" src="{% static 'media/logo.png' %}" alt="Logo" />
+    </header>
+
+    <div class="central-container">
+        Inicio administrador
+        <ul>
+            <li><a href="{% url 'register_admin' %}">Registrar administrador</a></li>
+            <li><a href="{% url 'register_doctor' %}">Registrar doctor</a></li>
+            <li><a href="{% url 'register_receptionist' %}">Registrar recepcionista</a></li>
+            <li><a href="{% url 'register_patient' %}">Registrar paciente</a></li>
+            <li><a href="">Registrar beneficiario</a></li>    
+        </ul>
+    </div>
+
+    <footer>
+        <div class="footer-gold"></div>
+        <div class="footer-green"></div>
+    </footer>
+    <script src="{% static 'scripts/consultation.js' %}"></script>
+</body>
+</html>
