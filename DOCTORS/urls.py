@@ -8,6 +8,7 @@ urlpatterns = [
     path('login_admin', views.login, name='login_admin'),
     path('home_superadmin', views.home_superadmin, name='home_superadmin'),
     path('home_doctor', views.home_doctor, name='home_doctor'),
+    path('home_receptionist', views.home_receptionist, name='home_receptionist'),
     path('process_medical_history', views.process_medical_history, name='process_medical_history'),
     path('process_evolution_note', views.process_evolution_note, name='process_evolution_note'),
     path('process_incapacity', views.process_incapacity, name='process_incapacity'),

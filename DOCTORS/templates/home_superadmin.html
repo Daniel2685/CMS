@@ -17,13 +17,19 @@
     </header>
 
     <div class="central-container">
-        Inicio superadministrador
+        <h1>Inicio superadministrador</h1>
+        <h2>Operaciones de usuarios</h2>
         <ul>
+            <li><a href="{% url 'register_superadmin' %}">Registrar superadministrador</a></li>
             <li><a href="{% url 'register_admin' %}">Registrar administrador</a></li>
             <li><a href="{% url 'register_doctor' %}">Registrar doctor</a></li>
             <li><a href="{% url 'register_receptionist' %}">Registrar recepcionista</a></li>
             <li><a href="{% url 'register_patient' %}">Registrar paciente</a></li>
             <li><a href="">Registrar beneficiario</a></li>    
+        </ul>
+        <h2>Operaciones de Horarios</h2>
+        <ul>
+            <li><a href="{% url 'register_schedule' %}">Registrar horario</a></li>
         </ul>
     </div>
 
