@@ -192,7 +192,7 @@ def register_schedule(request):
         return render(request, 'register_schedule.html', {'register_schedule_form' : register_schedule_form})
 
 
-def login_admin(request):
+def login(request):
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -204,9 +204,20 @@ def login_admin(request):
                 print('Response Text: ', response.text)
                 if response.status_code == 200:
                     response_json = response.json()
-                    admin_json = response_json.get('data', {})
-                    token = doctor_json.get('token')
-                    response2 = redirect('home_admin')
+                    user_json = response_json.get('data', {})
+                    token = user_json.get('token')
+                    role = user_json.get('role')
+                    response2 = None
+                    if role == 1:
+                        response2 = redirect('home_superadmin')
+                    elif role == 2:
+                        pass 
+                        #redirigir a admin
+                    elif role == 3:
+                        response2 = redirect('home_doctor')
+                    elif role == 4:
+                        pass 
+                        #Redirigir a recepcionista
                     response2.set_cookie('authToken', token, httponly=True, secure=True, samesite='Strict')
                     return response2;
                 else:
@@ -245,8 +256,8 @@ def login_doctor(request):
         return render(request, 'login.html', {'login_form' : login_form})
 
 
-def home_admin(request):
-    return render(request, 'home_admin.html')
+def home_superadmin(request):
+    return render(request, 'home_superadmin.html')
     '''
     Esto se tiene que validar con el servidor de billy
     token = request.COOKIES.get('authToken')
