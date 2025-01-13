@@ -102,8 +102,8 @@ class RegisterDoctorForm(forms.Form):
     medical_license = forms.CharField(min_length=8, max_length=8, label="Cédula Profesional")
     specialty_id = forms.ChoiceField(choices=[], label="Especialidad")
     name = forms.CharField(max_length=50, validators=[no_blank_validator], label="Nombre")
-    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Paterno")
-    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Materno")
+    lastname1 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Paterno")
+    lastname2 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Materno")
     #speciality_license = forms.CharField(min_length=8, max_length=8, label="Cédula de Especialidad")
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
@@ -122,7 +122,8 @@ class RegisterReceptionistForm(forms.Form):
         ('M', 'Masculino'),
         ('F', 'Femenino')
     ]
-    first_name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
+    dependency_id = forms.ChoiceField(choices=[], label='Dependencia')
+    name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
     last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
     last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
     curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')

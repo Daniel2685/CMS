@@ -21,7 +21,7 @@ def register_superadmin(request):
                 form = RegisterSuperadminForm(request.POST)
                 if form.is_valid():
                     superadmin = form.cleaned_data
-                    url_api = "https://api.ax01.dev/v1/patients"
+                    url_api = "https://api.ax01.dev/v1/admin/superadmin"
                     try:
                         response = requests.post(url_api, json=superadmin)
                         print("Status Code:", response.status_code)
@@ -97,10 +97,20 @@ def register_doctor(request):
                 form.fields['dependency_id'].choices = DEPENDENCIES
                 if form.is_valid():
                     doctor = form.cleaned_data
+                    doctor.pop('password2', None)
+                    doctor['dependency_id'] = int(doctor['dependency_id'])
+                    doctor['specialty_id'] = int(doctor['specialty_id'])
                     url_api = "https://api.ax01.dev/v1/doctors"
+                    auth_token = user_data.get('token')
+                    headers = {
+                        'Authorization': f'Bearer {auth_token}',
+                        'Content-Type': 'application/json'
+                    }
                     try:
-                        response = requests.post(url_api, json=doctor)
+                        response = requests.post(url_api, json=doctor, headers=headers)
                         print("Status Code:", response.status_code)
+                        print(response.text)
+                        print(doctor)
                         if response.status_code == 200:
                             return HttpResponse('Registro exitoso')
                         else:
@@ -127,14 +137,30 @@ def register_receptionist(request):
         user_data = json.loads(user_data_cookie)
         role = int(user_data.get('role'))
         if role == 1 or role == 2: 
+            DEPENDENCIES = [
+                (1, "SUTESUAEM"),
+                (2, "FAAPA"),
+                (3, "ALUMNO"),
+                (4, "CONFIANZA"),
+                (5, "EXTERNO")
+            ]
             if request.method == 'POST':
                 form = RegisterReceptionistForm(request.POST)
+                form.fields['dependency_id'].choices = DEPENDENCIES
                 if form.is_valid():
+                    form.fields.pop('password2', None)
                     receptionist = form.cleaned_data
-                    url_api = "https://api.ax01.dev/v1/patients"
+                    receptionist['dependency_id'] = int(receptionist['dependency_id'])
+                    url_api = "https://api.ax01.dev/v1/admin/receptionist"
+                    auth_token = user_data.get('token')
+                    headers = {
+                        'Authorization': f'Bearer {auth_token}',
+                        'Content-Type': 'application/json'
+                    }
                     try:
-                        response = requests.post(url_api, json=receptionist)
+                        response = requests.post(url_api, json=receptionist, headers=headers)
                         print("Status Code:", response.status_code)
+                        print(receptionist)
                         if response.status_code == 200:
                             return HttpResponse('Registro exitoso')
                         else:
@@ -145,11 +171,13 @@ def register_receptionist(request):
                     return render(request, 'register_receptionist.html', {'register_receptionist_form': form})
             else:
                 form = RegisterReceptionistForm()
+                form.fields['dependency_id'].choices = DEPENDENCIES
                 return render(request, 'register_receptionist.html', {'register_receptionist_form': form})
         else:
             return HttpResponse('Permiso denegado')
     else:
         return HttpResponse('Permiso denegado')
+
 
 
 def register_patient(request):
