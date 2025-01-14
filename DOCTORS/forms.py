@@ -100,7 +100,7 @@ class RegisterDoctorForm(forms.Form):
     ]
     dependency_id = forms.ChoiceField(choices=[], label='Dependencia')
     medical_license = forms.CharField(min_length=8, max_length=8, label="Cédula Profesional")
-    specialty_id = forms.ChoiceField(choices=[], label="Especialidad")
+    #specialty_id = forms.ChoiceField(choices=[], label="Especialidad")
     name = forms.CharField(max_length=50, validators=[no_blank_validator], label="Nombre")
     lastname1 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Paterno")
     lastname2 = forms.CharField(max_length=50, validators=[no_blank_validator], label="Apellido Materno")
@@ -124,8 +124,8 @@ class RegisterReceptionistForm(forms.Form):
     ]
     dependency_id = forms.ChoiceField(choices=[], label='Dependencia')
     name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
-    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
-    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
+    lastname1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
+    lastname2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
     curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
@@ -146,36 +146,16 @@ class RegisterScheduleForm(forms.Form):
         ('00:30', '30 minutos')
     ]
 
-    SHIFTS = [
-        (1, 'Matutino'),
-        (2, 'Vespertino')
-    ]
-
-    SERVICES = [
-        (1, "Medicina General"),
-        (2, "Pediatría"),
-        (3, "Ginecología")
-    ]
-
     HOURS = [(f"{hora:02d}:00", f"{hora:02d}:00") for hora in range(7, 21)]
 
-    DAYS = [
-    (1, 'Lunes'),
-    (2, 'Martes'),
-    (3, 'Miércoles'),
-    (4, 'Jueves'),
-    (5, 'Viernes'),
-    (6, 'Sábado'),
-    ]
-
-    selectedDays =  forms.MultipleChoiceField(choices=DAYS, widget=forms.CheckboxSelectMultiple, label='Días de la semana')
+    selectedDays =  forms.MultipleChoiceField(choices=[], widget=forms.CheckboxSelectMultiple, label='Días de la semana')
     timeStart = forms.ChoiceField(choices=HOURS, label='Hora de inicio')
     timeEnd = forms.ChoiceField(choices=HOURS, label='Hora de término')
     timeDuration = forms.ChoiceField(choices=DURATIONS, label='Duración')
-    officeID = forms.CharField(max_length=2, label='Número consultorio')
-    shiftID = forms.ChoiceField(choices=SHIFTS, label='Turno')
-    serviceID = forms.ChoiceField(choices=SERVICES, label='Servicio')
-    doctorID = forms.CharField(max_length=36, label='ID Doctor')
+    officeID = forms.ChoiceField(choices=[], label='Número consultorio')
+    shiftID = forms.ChoiceField(choices=[], label='Turno')
+    serviceID = forms.ChoiceField(choices=[], label='Servicio')
+    doctorID = forms.ChoiceField(choices=[], label='ID Doctor')
 
 '''
 
