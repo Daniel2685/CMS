@@ -22,7 +22,12 @@
             <img class="hospital-logo" src="{% static 'media/logo2.png' %}" alt="Logo" />
             {% csrf_token %}
             <div class="form-group">
-                {{ register_admin_form.as_p }}
+                {% for field in register_admin_form %}
+                    <div class="form-item">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
             </div>
             <button type="submit">Registrar</button>
         </form>
