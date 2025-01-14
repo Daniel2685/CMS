@@ -59,13 +59,12 @@ header {
 
 .uaemex-logo {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: 6vh; /* Ajustado para pantallas pequeñas */
-    max-width: 6vw; /* Ajustado para pantallas pequeñas */
+    width: 90px;  
     height: auto;
-    width: auto;
+}
+.hospital-logo {
+    width: 150px;  /* Tamaño por defecto para pantallas grandes */
+    height: auto;
 }
 
 /* Similar a lo de arriba para darle color al footer */
@@ -91,12 +90,14 @@ footer {
     width: 100%;
 }
 
+/* Usar flexbox para el contenido central, dejando un 90% de espacio para el contenido */
 .central-container {
     display: flex;
     width: 100%;
-    height: 80vh;
+    height: 100%;  /* Ajuste de altura para ocupar toda la ventana */
 }
 
+/* Formulario */
 form {
     width: 400px;
     background-color: #E9E9E9;
@@ -107,16 +108,18 @@ form {
     padding: 20px;
 }
 
+/* Main, que contiene el formulario */
 main {
     background-color: #ffff;
     width: 100%;
     display: flex;
     flex-direction: column;
-    height: 90%;
+    justify-content: flex-start;
+    min-height: 80vh;  /* Ajusta el mínimo de altura para que ocupe un 80% de la ventana */
     overflow-y: auto;
     overflow-x: hidden;
     align-items: center;
-    justify-content: flex-start;
+    height: 80%;
 }
 
 /* Contenedor del formulario con Grid */
@@ -164,6 +167,7 @@ button {
 button:hover {
     background-color: #9C8414;
 }
+
 /* Media Queries para pantallas más pequeñas */
 @media (max-width: 1024px) {
     .uaemex-logo {
@@ -182,6 +186,7 @@ button:hover {
 
     main h1 {
         font-size: 1.5rem;
+        margin-bottom: 2px;
     }
 }
 
@@ -237,10 +242,7 @@ button:hover {
     }
 }
 
-.hospital-logo {
-    width: 150px;  /* Tamaño por defecto para pantallas grandes */
-    height: auto;
-}
+
 
 /* Media Queries para pantallas más pequeñas */
 @media (max-width: 1024px) {
