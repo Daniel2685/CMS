@@ -6,190 +6,313 @@ import json
 import requests
 
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
-from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm
+from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm, LoginForm
 
 def index(request):
     return HttpResponse('Bienvenido a la sección de doctores')
 
 def register_superadmin(request):
-    if request.method == 'POST':
-        form = RegisterSuperadminForm(request.POST)
-        if form.is_valid():
-            superadmin = form.cleaned_data
-            url_api = "https://api.ax01.dev/v1/patients"
-            try:
-                response = requests.post(url_api, json=superadmin)
-                print("Status Code:", response.status_code)
-                if response.status_code == 200:
-                    return HttpResponse('Registro exitoso')
+    user_data_cookie = request.COOKIES.get('userData')
+    if user_data_cookie:
+        user_data = json.loads(user_data_cookie)
+        role = int(user_data.get('role'))
+        if role == 1:
+            if request.method == 'POST':
+                form = RegisterSuperadminForm(request.POST)
+                if form.is_valid():
+                    superadmin = form.cleaned_data
+                    url_api = "https://api.ax01.dev/v1/admin/superadmin"
+                    try:
+                        response = requests.post(url_api, json=superadmin)
+                        print("Status Code:", response.status_code)
+                        if response.status_code == 200:
+                            return HttpResponse('Registro exitoso')
+                        else:
+                            return HttpResponse('Registro fallido')
+                    except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos')
                 else:
-                    return HttpResponse('Registro fallido')
-            except requests.RequestException as e:
-                    return HttpResponse('Error al enviar los datos')
+                    return render(request, 'register_superadmin.html', {'register_superadmin_form': form})
+            else:
+                form = RegisterSuperadminForm()
+                return render(request, 'register_superadmin.html', {'register_superadmin_form': form})
         else:
-            return render(request, 'register_superadmin.html', {'register_superadmin_form': form})
+            return HttpResponse('Permiso denegado')
     else:
-        form = RegisterSuperadminForm()
-    return render(request, 'register_superadmin.html', {'register_superadmin_form': form})
+        return HttpResponse('Permiso denegado')
+
 
 def register_admin(request):
-    if request.method == 'POST':
-        form = RegisterAdminForm(request.POST)
-        if form.is_valid():
-            admin = form.cleaned_data
-            url_api = "https://api.ax01.dev/v1/patients"
-            try:
-                response = requests.post(url_api, json=admin)
-                print("Status Code:", response.status_code)
-                if response.status_code == 200:
-                    return HttpResponse('Registro exitoso')
+    user_data_cookie = request.COOKIES.get('userData')
+    if(user_data_cookie):
+        user_data = json.loads(user_data_cookie)
+        role = int(user_data.get('role'))
+        if(role == 1 or role == 2):
+            if request.method == 'POST':
+                form = RegisterAdminForm(request.POST)
+                if form.is_valid():
+                    admin = form.cleaned_data
+                    url_api = "https://api.ax01.dev/v1/patients"
+                    try:
+                        response = requests.post(url_api, json=admin)
+                        print("Status Code:", response.status_code)
+                        if response.status_code == 200:
+                            return HttpResponse('Registro exitoso')
+                        else:
+                            return HttpResponse('Registro fallido')
+                    except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos')
                 else:
-                    return HttpResponse('Registro fallido')
-            except requests.RequestException as e:
-                    return HttpResponse('Error al enviar los datos')
+                    return render(request, 'register_admin.html', {'register_admin_form': form})
+            else:
+                form = RegisterAdminForm()
+                return render(request, 'register_admin.html', {'register_admin_form' : form})
         else:
-            return render(request, 'register_admin.html', {'register_admin_form': form})
+            return HttpResponse('Permiso denegado')
     else:
-        form = RegisterAdminForm()
-    return render(request, 'register_admin.html', {'register_admin_form' : form})
+        return HttpResponse('Permiso denegado')
+    
 
 def register_doctor(request):
-    SPECIALTIES = [
-            (1, 'Medicina general'),
-            (2, 'Terapia física'),
-            (3, 'Pediatría'),
-    ]
-    DEPENDENCIES = [
-        (1, "SUTESUAEM"),
-        (2, "FAAPA"),
-        (3, "ALUMNO"),
-        (4, "CONFIANZA"),
-        (5, "EXTERNO")
-    ]   
-    if request.method == 'POST':
-        form = RegisterDoctorForm(request.POST)
-        form.fields['specialty_id'].choices = SPECIALTIES
-        form.fields['dependency_id'].choices = DEPENDENCIES
-        if form.is_valid():
-            doctor = form.cleaned_data
-            url_api = "https://api.ax01.dev/v1/doctors"
-            try:
-                response = requests.post(url_api, json=doctor)
-                print("Status Code:", response.status_code)
-                if response.status_code == 200:
-                    return HttpResponse('Registro exitoso')
+    user_data_cookie = request.COOKIES.get('userData')
+    if(user_data_cookie):
+        user_data = json.loads(user_data_cookie)
+        role = int(user_data.get('role'))
+        if(role == 1 or role == 2):
+            SPECIALTIES = [
+                (1, 'Medicina general'),
+                (2, 'Terapia física'),
+                (3, 'Pediatría'),
+            ]
+            DEPENDENCIES = [
+                (1, "SUTESUAEM"),
+                (2, "FAAPA"),
+                (3, "ALUMNO"),
+                (4, "CONFIANZA"),
+                (5, "EXTERNO")
+            ]   
+            if request.method == 'POST':
+                form = RegisterDoctorForm(request.POST)
+                form.fields['specialty_id'].choices = SPECIALTIES
+                form.fields['dependency_id'].choices = DEPENDENCIES
+                if form.is_valid():
+                    doctor = form.cleaned_data
+                    doctor.pop('password2', None)
+                    doctor['dependency_id'] = int(doctor['dependency_id'])
+                    doctor['specialty_id'] = int(doctor['specialty_id'])
+                    url_api = "https://api.ax01.dev/v1/doctors"
+                    auth_token = user_data.get('token')
+                    headers = {
+                        'Authorization': f'Bearer {auth_token}',
+                        'Content-Type': 'application/json'
+                    }
+                    try:
+                        response = requests.post(url_api, json=doctor, headers=headers)
+                        print("Status Code:", response.status_code)
+                        print(response.text)
+                        print(doctor)
+                        if response.status_code == 200:
+                            return HttpResponse('Registro exitoso')
+                        else:
+                            return HttpResponse('Registro fallido')
+                    except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos')
                 else:
-                    return HttpResponse('Registro fallido')
-            except requests.RequestException as e:
-                return HttpResponse('Error al enviar los datos')
+                    return render(request, 'register_doctor.html', {'register_doctor_form': form})
+            else:
+                #Estas especialidades y dependencias las obtendríamos de la base de datos
+                form = RegisterDoctorForm()
+                form.fields['specialty_id'].choices = SPECIALTIES
+                form.fields['dependency_id'].choices = DEPENDENCIES
+                return render(request, 'register_doctor.html', {'register_doctor_form' : form})
         else:
-            return render(request, 'register_doctor.html', {'register_doctor_form': form})
+            return HttpResponse('Permiso denegado')
     else:
-        #Estas especialidades y dependencias las obtendríamos de la base de datos
-        form = RegisterDoctorForm()
-        form.fields['specialty_id'].choices = SPECIALTIES
-        form.fields['dependency_id'].choices = DEPENDENCIES
-        return render(request, 'register_doctor.html', {'register_doctor_form' : form})
+        return HttpResponse('Permiso denegado')
 
 
 def register_receptionist(request):
-    if request.method == 'POST':
-        form = RegisterReceptionistForm(request.POST)
-        if form.is_valid():
-            recpetionist = form.cleaned_data
-            url_api = "https://api.ax01.dev/v1/patients"
-            try:
-                response = requests.post(url_api, json=recpetionist)
-                print("Status Code:", response.status_code)
-                if response.status_code == 200:
-                    return HttpResponse('Registro exitoso')
+    user_data_cookie = request.COOKIES.get('userData')
+    if user_data_cookie:
+        user_data = json.loads(user_data_cookie)
+        role = int(user_data.get('role'))
+        if role == 1 or role == 2: 
+            DEPENDENCIES = [
+                (1, "SUTESUAEM"),
+                (2, "FAAPA"),
+                (3, "ALUMNO"),
+                (4, "CONFIANZA"),
+                (5, "EXTERNO")
+            ]
+            if request.method == 'POST':
+                form = RegisterReceptionistForm(request.POST)
+                form.fields['dependency_id'].choices = DEPENDENCIES
+                if form.is_valid():
+                    form.fields.pop('password2', None)
+                    receptionist = form.cleaned_data
+                    receptionist['dependency_id'] = int(receptionist['dependency_id'])
+                    url_api = "https://api.ax01.dev/v1/admin/receptionist"
+                    auth_token = user_data.get('token')
+                    headers = {
+                        'Authorization': f'Bearer {auth_token}',
+                        'Content-Type': 'application/json'
+                    }
+                    try:
+                        response = requests.post(url_api, json=receptionist, headers=headers)
+                        print("Status Code:", response.status_code)
+                        print(receptionist)
+                        if response.status_code == 200:
+                            return HttpResponse('Registro exitoso')
+                        else:
+                            return HttpResponse('Registro fallido')
+                    except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos')
                 else:
-                    return HttpResponse('Registro fallido')
-            except requests.RequestException as e:
-                    return HttpResponse('Error al enviar los datos')
+                    return render(request, 'register_receptionist.html', {'register_receptionist_form': form})
+            else:
+                form = RegisterReceptionistForm()
+                form.fields['dependency_id'].choices = DEPENDENCIES
+                return render(request, 'register_receptionist.html', {'register_receptionist_form': form})
         else:
-            return render(request, 'register_receptionist.html', {'register_receptionist_form': form})
+            return HttpResponse('Permiso denegado')
     else:
-        form = RegisterReceptionistForm()
-    return render(request, 'register_receptionist.html', {'register_receptionist_form' : form})
+        return HttpResponse('Permiso denegado')
+
+
 
 def register_patient(request):
-    if request.method == 'POST':
-        print("registro")
-        register_patient_form = RegisterPatientForm(request.POST)
-        if register_patient_form.is_valid():
-            patient = register_patient_form.cleaned_data
-            patient['dependency_id'] = int(patient['dependency_id'])
-            print(patient)
-            url_api = "https://api.ax01.dev/v1/patients"
-            try:
-                response = requests.post(url_api, json=patient)
-                print("Status Code:", response.status_code)
-                print("Response Text:", response.text)
-                if response.status_code == 200:
-                    return HttpResponse('Registro exitoso')
+    user_data_cookie = request.COOKIES.get('userData')
+    if user_data_cookie:
+        user_data = json.loads(user_data_cookie)
+        role = int(user_data.get('role'))
+        if role == 1 or role == 2: 
+            if request.method == 'POST':
+                print("registro")
+                register_patient_form = RegisterPatientForm(request.POST)
+                if register_patient_form.is_valid():
+                    patient = register_patient_form.cleaned_data
+                    patient['dependency_id'] = int(patient['dependency_id'])
+                    print(patient)
+                    url_api = "https://api.ax01.dev/v1/patients"
+                    try:
+                        response = requests.post(url_api, json=patient)
+                        print("Status Code:", response.status_code)
+                        print("Response Text:", response.text)
+                        if response.status_code == 200:
+                            return HttpResponse('Registro exitoso')
+                        else:
+                            return HttpResponse('Registro fallido')
+                    except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos')
                 else:
-                    return HttpResponse('Registro fallido')
-            except requests.RequestException as e:
-                return HttpResponse('Error al enviar los datos')
+                    return render(request, 'register_patient.html', {'register_patient_form': register_patient_form})
+            else:
+                register_patient_form = RegisterPatientForm()
+                return render(request, 'register_patient.html', {'register_patient_form': register_patient_form})
+        else:
+            return HttpResponse('Permiso denegado')
     else:
-        register_patient_form = RegisterPatientForm()
-        return render(request, 'register_patient.html', {'register_patient_form' : register_patient_form})
+        return HttpResponse('Permiso denegado')
 
 
 def register_schedule(request):
-    auth_token = request.COOKIES.get('authToken')
-    if request.method == 'POST':
-        register_schedule_form = RegisterScheduleForm(request.POST)
-        if register_schedule_form.is_valid():
-            schedule = register_schedule_form.cleaned_data
-            timeDuration = datetime.strptime(schedule.get('timeDuration'), '%H:%M')
-            duration = timeDuration.hour * 60 + timeDuration.minute
-            timeStart = datetime.strptime(schedule.get('timeStart'), '%H:%M')
-            timeEnd = datetime.strptime(schedule.get('timeEnd'), '%H:%M')
-            timeSlots = []
-            currentTime = timeStart
-            while currentTime + timedelta(minutes=duration) <= timeEnd:
-                nextTime = currentTime + timedelta(minutes=duration)
-                timeSlots.append(f"{currentTime.strftime('%H:%M')} - {nextTime.strftime('%H:%M')}")
-                currentTime = nextTime
-            selectedDays = [int(day) for day in schedule.get('selectedDays')]
-            for day in selectedDays:
-                print(day)
-            print(timeSlots)
-            print(schedule)
+    user_data_cookie = request.COOKIES.get('userData')
+    if user_data_cookie:
+        user_data = json.loads(user_data_cookie)
+        role = int(user_data.get('role'))
+        auth_token = user_data.get('token')  # Obtener el token de autorización desde la cookie
+        if role in [1, 2, 4]: 
+            if request.method == 'POST':
+                register_schedule_form = RegisterScheduleForm(request.POST)
+                if register_schedule_form.is_valid():
+                    schedule = register_schedule_form.cleaned_data
+                    timeDuration = datetime.strptime(schedule.get('timeDuration'), '%H:%M')
+                    duration = timeDuration.hour * 60 + timeDuration.minute
+                    timeStart = datetime.strptime(schedule.get('timeStart'), '%H:%M')
+                    timeEnd = datetime.strptime(schedule.get('timeEnd'), '%H:%M')
+                    timeSlots = []
+                    currentTime = timeStart
+                    while currentTime + timedelta(minutes=duration) <= timeEnd:
+                        nextTime = currentTime + timedelta(minutes=duration)
+                        timeSlots.append(f"{currentTime.strftime('%H:%M')} - {nextTime.strftime('%H:%M')}")
+                        currentTime = nextTime
+                    selectedDays = [int(day) for day in schedule.get('selectedDays')]
+                    for day in selectedDays:
+                        print(day)
+                    print(timeSlots)
+                    print(schedule)
 
-            url_api = "https://api.ax01.dev/v1/schedule"
+                    url_api = "https://api.ax01.dev/v1/schedule"
+                    try:
+                        headers = {
+                            'Authorization': f'Bearer {auth_token}',
+                            'Content-Type': 'application/json'
+                        }
+                        schedule_json = {
+                            'selectedDays': selectedDays,
+                            'timeStart': schedule.get('timeStart'),
+                            'timeEnd': schedule.get('timeEnd'),
+                            'timeDuration': schedule.get('timeDuration'),
+                            'shiftID': schedule.get('shiftID'),
+                            'serviceID': schedule.get('serviceID'),
+                            'doctorID': schedule.get('doctorID'),
+                            'officeID': schedule.get('officeID'),
+                            'timeSlots': timeSlots
+                        }
+                        print(schedule_json)
+                        response = requests.post(url_api, json=schedule_json, headers=headers)
+                        print("Status Code:", response.status_code)
+                        print("Response Text:", response.text)
+                        if response.status_code == 200:
+                            return HttpResponse('Horario creado con éxito')
+                        else:
+                            return HttpResponse('No se ha podido crear el horario')
+                    except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos')
+            else:
+                register_schedule_form = RegisterScheduleForm()
+                return render(request, 'register_schedule.html', {'register_schedule_form': register_schedule_form})
+        else:
+            return HttpResponse('Permiso denegado')
+    else:
+        return HttpResponse('Permiso denegado')
+
+
+
+def login(request):
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            admin = login_form.cleaned_data
+            url_api = 'https://api.ax01.dev/v1/login'
             try:
-                headers = {
-                'Authorization': f'Bearer {auth_token}',
-                'Content-Type': 'application/json' 
-                }
-                schedule_json = {
-                    'selectedDays' : selectedDays,
-                    'timeStart' : schedule.get('timeStart'),
-                    'timeEnd' : schedule.get('timeEnd'),
-                    'timeDuration' : schedule.get('timeDuration'),
-                    'shiftID' : schedule.get('shiftID'),
-                    'serviceID' : schedule.get('serviceID'),
-                    'doctorID' : schedule.get('doctorID'),
-                    'officeID' : schedule.get('officeID'),
-                    'timeSlots' : timeSlots
-                }
-                print(schedule_json)
-                response = requests.post(url_api, json=schedule_json, headers=headers)
-                print("Status Code:", response.status_code)
-                print("Response Text:", response.text)
+                response = requests.post(url_api, json=admin)
+                print('Status Code: ', response.status_code)
+                print('Response Text: ', response.text)
                 if response.status_code == 200:
-                    return HttpResponse('Horario creado con exito')
+                    response_json = response.json()
+                    user_json = response_json.get('data', {})
+                    role = user_json.get('role')
+                    response2 = None
+                    if role == 1:
+                        response2 = redirect('home_superadmin')
+                    elif role == 2:
+                        pass 
+                        #redirigir a admin
+                    elif role == 3:
+                        response2 = redirect('home_doctor')
+                    elif role == 4:
+                        pass 
+                        #Redirigir a recepcionista
+                    response2.set_cookie('userData', json.dumps(user_json), httponly=True, secure=True, samesite='Strict')
+                    return response2;
                 else:
-                    return HttpResponse('No se ha podido crear el horario')
+                    return render(request, 'login_admin.html', {'login_form' : login_form})
             except requests.RequestException as e:
                 return HttpResponse('Error al enviar los datos')
-
     else:
-        register_schedule_form = RegisterScheduleForm()
-        return render(request, 'register_schedule.html', {'register_schedule_form' : register_schedule_form})
+        login_form = LoginForm()
+        return render(request, 'login_admin.html', {'login_form' : login_form})
 
 
 def login_doctor(request):
@@ -217,14 +340,34 @@ def login_doctor(request):
     else:
         login_form = DoctorLoginForm()
         return render(request, 'login.html', {'login_form' : login_form})
+
+
+def home_superadmin(request):
+    return render(request, 'home_superadmin.html')
+    '''
+    Esto se tiene que validar con el servidor de billy
+    token = request.COOKIES.get('authToken')
+    if token:
+        return HttpResponse('Bienvenido administrador')
+        #return render(request, 'home_admin.html')
+    else:
+        return HttpResponse('Permiso denegado')
+    '''
+
     
 def home_doctor(request):
+    return render(request, 'home_doctor.html')
+    '''
+    Esto se tiene que validar con el servidor de billy
     token =  request.COOKIES.get('authToken')
     if token:
         return render(request, 'home_doctor.html')
     else:
         return HttpResponse('Permiso denegado')
+    '''
 
+def home_receptionist(request):
+    return render(request, 'home_receptionist.html')
 
 def provide_consultation(request):
     auth_token = request.COOKIES.get('authToken')
