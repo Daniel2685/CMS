@@ -56,9 +56,10 @@ class RegisterSuperadminForm(forms.Form):
         ('M', 'Masculino'),
         ('F', 'Femenino')
     ]
-    first_name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
-    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
-    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
+    dependency_id = forms.ChoiceField(choices=[], label='Dependencia')
+    name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
+    lastname1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
+    lastname2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
     curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
@@ -77,9 +78,10 @@ class RegisterAdminForm(forms.Form):
         ('M', 'Masculino'),
         ('F', 'Femenino')
     ]
-    first_name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
-    last_name1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
-    last_name2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
+    dependency_id = forms.ChoiceField(choices=[], label='Dependencia')
+    name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
+    lastname1 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Paterno')
+    lastname2 = forms.CharField(max_length=50, validators=[no_blank_validator], label='Apellido Materno')
     curp = forms.CharField(max_length=18, validators=[no_blank_validator], min_length=18, label='CURP')
     sex = forms.ChoiceField(choices=SEX, label='Sexo')
     phone = forms.CharField(max_length=10, min_length=10, label="Teléfono")
