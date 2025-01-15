@@ -29,7 +29,6 @@ body, html {
 }
 
 /* Estructura para darle color y poner el logo al header */
-
 header {
     display: flex;
     flex-direction: column;
@@ -68,7 +67,6 @@ header {
 }
 
 /* Similar a lo de arriba para darle color al footer */
-
 footer {
     display: flex;
     flex-direction: column;
@@ -124,26 +122,37 @@ ul.operation-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 ul.operation-list li {
-    width: 200px;
+    width: 300px; /* Aumentamos el tamaño de cada item */
     text-align: center;
     margin: 10px 0;
 }
 
 ul.operation-list li a {
-    display: block;
-    padding: 15px;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    padding: 20px; 
     background-color: var(--color-primary);
     color: white;
     text-decoration: none;
-    font-size: var(--font-size-p);
+    font-size: 1.4rem; 
     border-radius: 10px;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    min-height: 100px; /* Altura mínima consistente */
+    min-width: 250px; /* Ancho mínimo consistente */
+    height: 80px; /* Altura fija para todos los botones */
+    width: 250px; /* Ancho fijo para todos los botones */
+    box-sizing: border-box;
+    text-align: center;
 }
 
+
+
+/* Efectos de hover y active */
 ul.operation-list li a:hover {
     background-color: var(--color-secondary);
     transform: translateY(-5px);
@@ -164,15 +173,15 @@ ul.operation-list.schedule {
     .central-container {
         padding: 20px;
     }
-    
+
     ul.operation-list li {
-        width: 150px;
+        width: 200px; /* Ajustamos el tamaño para pantallas pequeñas */
     }
 
     h1 {
         font-size: 1.8rem;
     }
-    
+
     h2 {
         font-size: 1.2rem;
     }
