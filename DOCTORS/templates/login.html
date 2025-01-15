@@ -4,8 +4,8 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión Clínica</title>
     <link rel="icon" href="{% static 'media/logo.png' %}" type="image/x-icon">
-    <title>Iniciar Sesión Doctores</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -18,7 +18,8 @@
 
     <div class="central-container">
         <main>
-            <form action="{% url 'login_doctor' %}" method="post">
+            <h1>Inicio de sesión del personal de la clínica</h1>
+            <form action="{% url 'login' %}" method="post">
                 <img class="hospital-logo" src="{% static 'media/logo2.png' %}" alt="Logo" />
                 {% csrf_token %}
                 <div class="form-group">
