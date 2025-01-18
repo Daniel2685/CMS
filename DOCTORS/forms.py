@@ -1,5 +1,20 @@
 from django import forms
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
+import csv
+
+cie_diagnosis = 'diagnosticos_cie.csv'
+
+def load_diagnosis_from_csv(csv_file):
+    choices = []
+    with open(csv_file, newline='', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            if len(row) >= 2:
+                # Formar la tupla (código, "código + nombre")
+                choices.append((row[0], f"{row[0]} - {row[1]}"))
+    return choices
+
+diagnosis = load_diagnosis_from_csv(cie_diagnosis)
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -159,19 +174,11 @@ class RegisterScheduleForm(forms.Form):
     serviceID = forms.ChoiceField(choices=[], label='Servicio')
     doctorID = forms.ChoiceField(choices=[], label='ID Doctor')
 
-'''
+class RegisterSpecialtyForm(forms.Form):
+    name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
 
-class RegisterScheduleForm(forms.Form):
-    selectedDays #Esto es una lista de enteros que pueden ir de 1 a 7 para los dias de la semana
-    timeStart #Esto es para definir el tiempo de inicio
-    timeEnd #Esto es para definir el tiempo de finalizacion
-    timeDuration #Esto es para definir la duracion
-    shiftID #numero del 1 al 2 para ver si es matutino o vespertino
-    serviceID #esto simplemente es del servicio
-    doctorID #el id del doctor
-    officeID #el id del consultorio
-    timeSlots #los tiempos generados, lista de strings de fecha con formato ["09:00 - 10:00", "10:00 - 11:00"]
-'''
+class RegisterOfficeForm(forms.Form):
+    name = forms.CharField(max_length=50, validators=[no_blank_validator], label='Nombre')
 
 
 class DoctorLoginForm(forms.Form):
@@ -227,7 +234,7 @@ class MedicalHistoryForm(forms.Form):
     genital = forms.CharField(max_length=100, required=False, label='Genitales')
     extremities = forms.CharField(max_length=100, required=False, label='Extremidades')
     previous_results = forms.CharField(max_length=100, required=False, label='Resultados anteriores')
-    diagnoses = forms.CharField(max_length=100, required=False, label='Diagnósticos')
+    diagnoses = forms.ChoiceField(choices=diagnosis, label='Diagnósticos')
     pharmacological_treatment = forms.CharField(max_length=100, required=False, label='Tratamiento farmacológico')
     prognosis = forms.CharField(max_length=100, required=False, label='Pronóstico')
     doctor_name = forms.CharField(max_length=50, required=False, label='Nombre del médico')

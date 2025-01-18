@@ -6,7 +6,9 @@ import json
 import requests
 
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
-from .forms import MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm, LoginForm
+from .forms import (MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, 
+RegisterPatientForm, RegisterDoctorForm, RegisterSuperadminForm, RegisterAdminForm, RegisterReceptionistForm, RegisterSpecialtyForm, RegisterOfficeForm,LoginForm
+)
 
 def index(request):
     return HttpResponse('Bienvenido a la sección de doctores')
@@ -213,7 +215,6 @@ def register_patient(request):
         role = int(user_data.get('role'))
         if role == 1 or role == 2: 
             if request.method == 'POST':
-                print("registro")
                 register_patient_form = RegisterPatientForm(request.POST)
                 if register_patient_form.is_valid():
                     patient = register_patient_form.cleaned_data
@@ -237,6 +238,70 @@ def register_patient(request):
                 return render(request, 'register_patient.html', {'register_patient_form': register_patient_form})
         else:
             return HttpResponse('Permiso denegado')
+    else:
+        return HttpResponse('Permiso denegado')
+
+
+def register_specialty(request):
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    role = int(user_data.get('role'))
+    auth_token = user_data.get('token')
+    if (auth_token and (role == 1 or role == 2)):
+        if(request.method == 'POST'):
+            register_specialty_form = RegisterSpecialtyForm(request.POST)
+            if register_specialty_form.is_valid():
+                specialty = register_specialty_form.cleaned_data
+                url_specialty = 'https://api.ax01.dev/v1/specialty'
+                headers = {
+                    'Authorization': f'Bearer {auth_token}',
+                    'Content-Type': 'application/json'
+                }
+                try:
+                    response = requests.post(url_specialty, json=specialty, headers=headers)
+                    if response.status_code == 200:
+                        return HttpResponse('Registro exitoso')
+                    else:
+                        return HttpResponse('Registro fallido ' + response.text)
+                except requests.RequestException as e:
+                        return HttpResponse('Error al enviar los datos' + e)
+            else:
+                return render(request, 'register_specialty.html', {'register_specialty_form' : register_specialty_form})
+        else:
+            register_specialty_form = RegisterSpecialtyForm()
+            return render(request, 'register_specialty.html', {'register_specialty_form' : register_specialty_form})
+    else:
+        return HttpResponse('Permiso denegado')
+
+
+def register_office(request):
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    role = int(user_data.get('role'))
+    auth_token = user_data.get('token')
+    if auth_token and (role == 1 or role == 2):
+        if request.method == 'POST':
+            register_office_form = RegisterOfficeForm(request.POST)
+            if register_office_form.is_valid():
+                office = register_office_form.cleaned_data
+                url_office = 'https://api.ax01.dev/v1/office'
+                headers = {
+                    'Authorization': f'Bearer {auth_token}',
+                    'Content-Type': 'application/json'
+                }
+                try:
+                    response = requests.post(url_office, json=office, headers=headers)
+                    if response.status_code == 200:
+                        return HttpResponse('Registro exitoso')
+                    else:
+                        return HttpResponse('Registro fallido')
+                except requests.RequestException as e:
+                    return HttpResponse('Error al enviar los datos')
+            else:
+                return render(request, 'register_office.html', {'register_office_form': register_office_form})
+        else:
+            register_office_form = RegisterSpecialtyForm()
+            return render(request, 'register_office.html', {'register_office_form': register_office_form})
     else:
         return HttpResponse('Permiso denegado')
 
@@ -367,43 +432,59 @@ def login(request):
 
 
 def home_superadmin(request):
-    return render(request, 'home_superadmin.html')
-    '''
-    Esto se tiene que validar con el servidor de billy
-    token = request.COOKIES.get('authToken')
-    if token:
-        return HttpResponse('Bienvenido administrador')
-        #return render(request, 'home_admin.html')
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    token = user_data.get('token')
+    role = int(user_data.get('role'))
+    if (token and role == 1):
+        return render(request, 'home_superadmin.html')
     else:
         return HttpResponse('Permiso denegado')
-    '''
 
 def home_admin(request):
-    return render(request, 'home_admin.html')
-    
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    token = user_data.get('token')
+    role = int(user_data.get('role'))
+    if (token and role == 2):
+        return render(request, 'home_admin.html')
+    else:
+        return HttpResponse('Permiso denegado')
+
+def home_receptionist(request):
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    token = user_data.get('token')
+    role = int(user_data.get('role'))
+    if (token and role == 3):
+        return render(request, 'home_receptionist.html')
+    else:
+        return HttpResponse('Permiso denegado')
+
+
 def home_doctor(request):
-    return render(request, 'home_doctor.html')
-    '''
-    Esto se tiene que validar con el servidor de billy
-    token =  request.COOKIES.get('authToken')
-    if token:
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    token = user_data.get('token')
+    role = int(user_data.get('role'))
+    if (token and role == 4):
         return render(request, 'home_doctor.html')
     else:
         return HttpResponse('Permiso denegado')
-    '''
 
-def home_receptionist(request):
-    return render(request, 'home_receptionist.html')
 
 def provide_consultation(request):
-    auth_token = request.COOKIES.get('authToken')
-    if auth_token:
+    user_data_cookie = request.COOKIES.get('userData')
+    user_data = json.loads(user_data_cookie)
+    token = user_data.get('token')
+    role = int(user_data.get('role'))
+    if (token and role):
         initial_data = ''
         medical_history_status = False
         try:
             url_api = "https://api.ax01.dev/v1/medicalh"
             headers = {
-                'Authorization': f'Bearer {auth_token}',
+                'Authorization': f'Bearer {token}',
                 'Content-Type': 'application/json' 
             }
             data_send = {'medical_history_id' : 'ASG5-391964'}
