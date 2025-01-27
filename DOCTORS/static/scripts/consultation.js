@@ -17,3 +17,5 @@ window.onload = function() {
     // Mostrar el panel 1 inicialmente
     showContent('panel1');
 }
+
+

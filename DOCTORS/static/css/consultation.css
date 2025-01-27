@@ -5,8 +5,7 @@ body, html {
     height: 100%;
 }
 
-/*Definimos variables globales de color y tamaños*/
-
+/* Definimos variables globales de color y tamaños */
 :root {
     --color-primary: #284C34;
     --color-secondary: #9C8414;
@@ -36,7 +35,6 @@ body, html {
 }
 
 /* Estructura para darle color y poner el logo al header */
-
 header {
     display: flex;
     flex-direction: column;
@@ -71,7 +69,6 @@ header {
 }
 
 /* Similar a lo de arriba para darle color al footer */
-
 footer {
     display: flex;
     flex-direction: column;
@@ -94,16 +91,14 @@ footer {
     width: 100%;
 }
 
-/* Estoy dando el tamaño y la configuracion para el contenedor central */
-
+/* Estoy dando el tamaño y la configuración para el contenedor central */
 .central-container{
     display: flex;
     width: 100%;
     height: 80vh;
 }
 
-/* Aquí doy estructura a la barra de navegacion */
-
+/* Aquí doy estructura a la barra de navegación */
 .nav-bar {
     background-color: #E9E9E9;
     display: flex;
@@ -134,13 +129,10 @@ footer {
 }
 
 /* Con estas clases hago que los diferentes paneles vayan apareciendo o desapareciendo */
-
-/*Con esto hago que desaparezcan los paneles cuando no están seleccionados*/
 .tab-content {
     display: none;
 }
 
-/*Aquí pongo cómo se van a ver*/
 .tab-content.active {
     display: flex;
     flex-direction: column;
@@ -148,7 +140,6 @@ footer {
 }
 
 /* Aquí va la estructura del panel principal (donde aparecen los formularios) */
-
 main{
     background-color: #ffffff;
     width: 80%;
@@ -160,8 +151,7 @@ main{
     margin-left: 10%;
 }
 
-/*Aquí estoy poniendo el logo de la clínica y los datos del doctor*/
-
+/* Aquí estoy poniendo el logo de la clínica y los datos del doctor */
 .title{
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 40px;
@@ -192,39 +182,221 @@ main{
     margin: 0;
 }
 
-/*Aquí le doy estilo a los paneles*/
-/*Estructura del forms*/
-
-form{
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    height: 100%;
+/* Aquí le doy estilo a los paneles */
+/* Estilo general para los formularios */
+/* Configuración inicial del formulario */
+form {
+    display: grid;
+    grid-template-columns: auto auto; /* Dos columnas: una para las etiquetas y otra para los inputs */
+    gap: 15px;  /* Espacio entre los campos */
+    grid-template-rows: auto; /* Las filas se ajustan al contenido */
+    padding: 20px;
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 1000px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.icon-print{
+
+input[name="id"], 
+input[name="date_of_record"], 
+input[name="time_of_record"],
+input[name="date"]
+/*input[name="age"],
+input[name="gender"],
+input[name="temperature"], 
+input[name="weight"],
+input[name="height"],
+input[name="bmi"],
+input[name="systolic_blood_pressure"],
+input[name="diastolic_blood_pressure"],
+input[name="blood_pressure"],
+input[name="respiratory_rate"],
+input[name="heart_rate"]*/ {
+    width: 150px; /* Ajusta el ancho */
+    
+}
+
+
+
+
+/* Textarea modificada para que se expanda solo hacia abajo */
+textarea[name="family_medical_history"], 
+textarea[name="non_pathological_history"], 
+textarea[name="pathological_history"], 
+textarea[name="gynec_obstetric_history"], 
+textarea[name="current_condition"], 
+textarea[name="cardiovascular"], 
+textarea[name="respiratory"], 
+textarea[name="gastrointestinal"], 
+textarea[name="genitourinary"], 
+textarea[name="hematic_lymphatic"], 
+textarea[name="endocrine"], 
+textarea[name="nervous_system"], 
+textarea[name="musculoskeletal"], 
+textarea[name="skin"], 
+textarea[name="physical"], 
+textarea[name="head"], 
+textarea[name="neck_and_chest"], 
+textarea[name="abdomen"], 
+textarea[name="genital"], 
+textarea[name="extremities"], 
+textarea[name="previous_results"], 
+textarea[name="prognosis"], 
+textarea[name="pharmacological_treatment"] {
+    width: 100%; /* Asegura que el textarea ocupe el 100% del contenedor */
+    min-height: 80px; /* Establece una altura mínima visible */
+    resize: none; /* Desactiva la capacidad de cambiar el tamaño de manera manual */
+    overflow-y: hidden; /* No se muestran barras de desplazamiento */
+    box-sizing: border-box; /* Asegura que el padding y borde estén incluidos en el tamaño */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid var(--color-secondary); /* Bordes del campo */
+    background-color: #f7f7f7; /* Fondo gris claro */
+    color: var(--color-text); /* Color del texto */
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-p);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Asegurarse de que otros textos dentro del formulario se comporten de manera similar */
+form textarea {
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-p);
+    color: var(--color-text);
+    padding: 10px;
+    border: 1px solid var(--color-secondary);
+    background-color: #f7f7f7;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto de enfoque */
+form textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px rgba(40, 76, 52, 0.4);
+}
+
+
+
+/* Otros campos como diagnósticos y afiliación pueden mantenerse como están */
+select[name="other_affiliation"],
+select[name="diagnoses"] {
+    width: 300px; /* Ajusta el tamaño según sea necesario */
+}
+
+/* Etiquetas */
+form label {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-H2);
+    color: var(--color-text);
+    font-weight: bold;
+}
+
+/* Inputs y selects */
+form input,
+form textarea,
+form select {
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-p);
+    padding: 10px 15px;
+    border: 1px solid var(--color-secondary);
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    color: var(--color-text);
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto al enfocar */
+form input:focus,
+form textarea:focus,
+form select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 5px rgba(40, 76, 52, 0.4);
+}
+
+/* Campos obligatorios */
+form .required label::after {
+    content: " *";
+    color: red;
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+    .form-group {
+        min-width: 100%;
+    }
+}
+
+/* Estilo general de los botones */
+button {
+    background-color: #284C34;
+    border: none;
+    color: #E9E9E9;
+    width: 150px; /* Ancho fijo para ambos botones */
+    height: 50px; /* Altura fija */
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-family: var(--font-primary);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover para los botones */
+button:hover {
+    background-color: #9C8414;
+    transform: scale(1.05); /* Ligero aumento al pasar el cursor */
+}
+
+/* Botón de imprimir */
+button.print-btn {
+    background-color: #9C8414; /* Color diferenciado para imprimir */
+}
+
+button.print-btn:hover {
+    background-color: #284C34; /* Invertido al pasar el cursor */
+}
+
+/* Botón de guardar */
+button.save-btn {
+    background-color: #284C34; /* Mantiene el color principal */
+}
+
+button.save-btn:hover {
+    background-color: #9C8414; /* Cambio de color al pasar el cursor */
+}
+
+/* Contenedor de botones */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la izquierda */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Diseño responsivo para los botones */
+@media (max-width: 768px) {
+    .form-actions {
+        justify-content: center; /* Centra los botones en pantallas pequeñas */
+    }
+    button {
+        width: 120px; /* Ajusta el ancho en dispositivos pequeños */
+        height: 40px; /* Ajusta la altura */
+        font-size: 14px;
+    }
+}
+
+.icon-print {
     width: 20px;
 }
 
-button {
-    background-color:  #284C34;
-    border: none;
-    color: #E9E9E9;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
-}
 
-button:hover {
-    background-color: #9C8414;
-}

@@ -60,12 +60,15 @@
                 <form action="{% url 'process_medical_history' %}" method="post">
                     {% csrf_token %}
                     {{ medical_history_form.as_p }}
-                    <button type="submit" id="save-button" title="Guardar">
-                        <img src="{% static 'media/save.png' %}" class="icon-print">
-                    </button>
-                    <button type="button" id="print-button" title="Imprimir">
-                        <img src="{% static 'media/print.png' %}" class="icon-print">
-                    </button>
+                    <!-- Contenedor para los botones -->
+                    <div class="form-actions">
+                        <button type="submit" id="save-button" title="Guardar">
+                            <img src="{% static 'media/save.png' %}" class="icon-print">
+                        </button>
+                        <button type="button" id="print-button" title="Imprimir">
+                            <img src="{% static 'media/print.png' %}" class="icon-print">
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -75,59 +78,67 @@
                 <form method="post" action="{% url 'process_evolution_note' %}">
                     {% csrf_token %}
                     {{ evolution_note_form.as_p }}
-                    <button type="submit" id="save-button" title="Guardar">
-                        <img src="{% static 'media/save.png' %}" class="icon-print">
-                    </button>
-                    <button type="button" id="print-button" title="Imprimir">
-                        <img src="{% static 'media/print.png' %}" class="icon-print">
-                    </button>
+                    <!-- Contenedor para los botones -->
+                    <div class="form-actions">
+                        <button type="submit" id="save-button" title="Guardar">
+                            <img src="{% static 'media/save.png' %}" class="icon-print">
+                        </button>
+                        <button type="button" id="print-button" title="Imprimir">
+                            <img src="{% static 'media/print.png' %}" class="icon-print">
+                        </button>
+                    </div>
                 </form>
             </div>
 
             <!--AQUÍ VA EL CÓDIGO PARA LA RECETA-->
-
             <div id="panel3" class="tab-content">
                 <p class="title">Receta</p>
                 <form method="post" action="{% url 'process_prescription' %}">
                     {% csrf_token %}
                     {{ prescription_form.as_p }}
-                    <button type="button" id="print-button" title="Imprimir">
-                        <img src="{% static 'media/print.png' %}" class="icon-print">
-                    </button>
+                    <!-- Contenedor para los botones -->
+                    <div class="form-actions">
+                        <button type="button" id="print-button" title="Imprimir">
+                            <img src="{% static 'media/print.png' %}" class="icon-print">
+                        </button>
+                    </div>
                 </form>
             </div>
 
             <!--AQUÍ VA EL CÓDIGO PARA LA INCAPACIDAD-->
-
             <div id="panel4" class="tab-content">
                 <p class="title">Incapacidad</p>
                 <form action="{% url 'process_incapacity' %}" method="post">
                     {% csrf_token %}
                     {{ incapacity_form.as_p }}
-                    <button type="submit" id="save-button" title="Guardar">
-                        <img src="{% static 'media/save.png' %}" class="icon-print">
-                    </button>
-                    <button type="button" id="print-button" title="Imprimir">
-                        <img src="{% static 'media/print.png' %}" class="icon-print">
-                    </button>
+                    <!-- Contenedor para los botones -->
+                    <div class="form-actions">
+                        <button type="submit" id="save-button" title="Guardar">
+                            <img src="{% static 'media/save.png' %}" class="icon-print">
+                        </button>
+                        <button type="button" id="print-button" title="Imprimir">
+                            <img src="{% static 'media/print.png' %}" class="icon-print">
+                        </button>
+                    </div>
                 </form>
             </div>
 
             <!--AQUÍ VA EL CÓDIGO PARA LA SOLICITUD DE LABORATORIO-->
-
             <div id="panel5" class="tab-content">
                 <p class="title">Solicitud de laboratorio</p>
                 <form action="{% url 'process_laboratory_requisition' %}" method="post">
                     {% csrf_token %}
                     {{ laboratory_requisition_form.as_p }}
-                    <button type="button" id="print-button" title="Imprimir">
-                        <img src="{% static 'media/print.png' %}" class="icon-print">
-                    </button>
+                    <!-- Contenedor para los botones -->
+                    <div class="form-actions">
+                        <button type="button" id="print-button" title="Imprimir">
+                            <img src="{% static 'media/print.png' %}" class="icon-print">
+                        </button>
+                    </div>
                 </form>
             </div>
 
             <!--AQUÍ VA EL CÓDIGO PARA MOSTRAR EL HISTORIAL CLÍNICO DEL PACIENTE-->
-
             <div id="panel6" class="tab-content">
                 <p class="title">Ver historial clínico</p>
             </div>
@@ -139,5 +150,7 @@
         <div class="footer-green"></div>
     </footer>
     <script src="{% static 'scripts/consultation.js' %}"></script>
+    <script src="{% static 'scripts/print.js' %}"></script>
+
 </body>
 </html>
