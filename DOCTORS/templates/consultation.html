@@ -47,7 +47,7 @@
             <div class="header-data-container">
                 <img class="logo-hospital" src="{% static 'media/logo2.png' %}" alt="Logo clinica"/>
                 <div class="doctor-data-container">
-                    <p class="title">{{ doctor.name }}</p>
+                    <p class="title">Clínica Multidisciplinaria de Salud</p>
                     <p class="datum">Servicio: {{ doctor.service }}</p>
                     <p class="datum">Cédula Profesional: {{ doctor.license1 }}</p>
                     <p class="datum">Cédula Especialidad: {{ doctor.license2 }}</p>
@@ -65,7 +65,7 @@
                         <button type="submit" id="save-button" title="Guardar">
                             <img src="{% static 'media/save.png' %}" class="icon-print">
                         </button>
-                        <button type="button" id="print-button" title="Imprimir">
+                        <button type="button" class="print-button" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>
@@ -83,7 +83,7 @@
                         <button type="submit" id="save-button" title="Guardar">
                             <img src="{% static 'media/save.png' %}" class="icon-print">
                         </button>
-                        <button type="button" id="print-button" title="Imprimir">
+                        <button type="button" class="print-button" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>
@@ -98,7 +98,7 @@
                     {{ prescription_form.as_p }}
                     <!-- Contenedor para los botones -->
                     <div class="form-actions">
-                        <button type="button" id="print-button" title="Imprimir">
+                        <button type="button" class="print-button" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>
@@ -116,7 +116,7 @@
                         <button type="submit" id="save-button" title="Guardar">
                             <img src="{% static 'media/save.png' %}" class="icon-print">
                         </button>
-                        <button type="button" id="print-button" title="Imprimir">
+                        <button type="button" class="print-button" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>
@@ -131,7 +131,7 @@
                     {{ laboratory_requisition_form.as_p }}
                     <!-- Contenedor para los botones -->
                     <div class="form-actions">
-                        <button type="button" id="print-button" title="Imprimir">
+                        <button type="button" class="print-button" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>

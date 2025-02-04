@@ -474,6 +474,7 @@ def home_doctor(request):
 
 
 def provide_consultation(request):
+    '''
     user_data_cookie = request.COOKIES.get('userData')
     user_data = json.loads(user_data_cookie)
     token = user_data.get('token')
@@ -579,6 +580,27 @@ def provide_consultation(request):
         return render(request, 'consultation.html', context)
     else:
         return HttpResponse("Permiso denegado")
+    '''
+    doc_test = {
+        'name' : 'name placeholder',
+        'service' : 'service placeholder',
+        'license1' : 'license placeholder',
+        'license2' : 'license placeholder'
+    }
+    medical_history_form = MedicalHistoryForm()
+    evolution_note_form = EvolutionNoteForm()
+    incapacity_form = IncapacityForm()
+    laboratory_requisition_form = LaboratoryRequisitionForm()
+    prescription_form = PrescriptionForm()
+    context = {
+        'medical_history_form' : medical_history_form,
+        'evolution_note_form' : evolution_note_form,
+        'incapacity_form' : incapacity_form,
+        'laboratory_requisition_form' : laboratory_requisition_form,
+        'prescription_form' : prescription_form,
+        'doctor' : doc_test
+    }
+    return render(request, 'consultation.html', context)
     
     
 
