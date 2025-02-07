@@ -27,7 +27,7 @@ document.querySelectorAll('.print-button').forEach(button => {
                             padding-bottom: 10px;
                         }
                         .header img {
-                            height: 200px;
+                            height: 100px;
                             width: auto;
                         }
                         .header-data{

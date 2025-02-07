@@ -186,10 +186,14 @@ main{
 /* Estilo general para los formularios */
 /* Configuración inicial del formulario */
 form {
-    display: grid;
-    grid-template-columns: auto auto; /* Dos columnas: una para las etiquetas y otra para los inputs */
-    gap: 15px;  /* Espacio entre los campos */
-    grid-template-rows: auto; /* Las filas se ajustan al contenido */
+    display: flex;
+    flex-direction: column;
+    margin-right: 5vw;
+    padding-bottom: 2vh;
+    /*
+    grid-template-columns: auto auto; /* Dos columnas: una para las etiquetas y otra para los inputs 
+    gap: 15px;  /* Espacio entre los campos 
+    grid-template-rows: auto; /* Las filas se ajustan al contenido 
     padding: 20px;
     border: 2px solid var(--color-secondary);
     border-radius: 12px;
@@ -197,6 +201,7 @@ form {
     width: 100%;
     max-width: 1000px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    */
 }
 
 
@@ -283,8 +288,10 @@ form textarea:focus {
 
 /* Otros campos como diagnósticos y afiliación pueden mantenerse como están */
 select[name="other_affiliation"],
-select[name="diagnoses"] {
-    width: 300px; /* Ajusta el tamaño según sea necesario */
+select[name="diagnoses_options"],
+select[name="pharma_options"]
+{
+    width: 100%; /* Ajusta el tamaño según sea necesario */
 }
 
 /* Etiquetas */
@@ -295,10 +302,10 @@ form label {
     font-weight: bold;
 }
 
-/* Inputs y selects */
+/* Inputs y selects form select */
 form input,
-form textarea,
-form select {
+form textarea
+ {
     font-family: var(--font-secondary);
     font-size: var(--font-size-p);
     padding: 10px 15px;
@@ -398,5 +405,3 @@ button.save-btn:hover {
 .icon-print {
     width: 20px;
 }
-
-

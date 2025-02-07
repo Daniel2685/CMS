@@ -14,7 +14,18 @@ def load_diagnosis_from_csv(csv_file):
                 choices.append((row[0], f"{row[0]} - {row[1]}"))
     return choices
 
+def load_pharma_from_csv(csv_file):
+    choices = []
+    with open(csv_file, newline='', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            if len(row) >= 6:
+                # Formar la tupla (código, "código + nombre")
+                choices.append((row[0], f"{row[0]} en {row[1]} por vía {row[2]} en dosis de {row[3]} , {row[4]} cada {row[5]}"))
+    return choices
+
 diagnosis = load_diagnosis_from_csv(cie_diagnosis)
+pharma = load_pharma_from_csv('lista_medicamentos.csv')
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -234,8 +245,10 @@ class MedicalHistoryForm(forms.Form):
     genital = forms.CharField(max_length=100, required=False, label='Genitales')
     extremities = forms.CharField(max_length=100, required=False, label='Extremidades')
     previous_results = forms.CharField(max_length=100, required=False, label='Resultados anteriores')
-    diagnoses = forms.ChoiceField(choices=diagnosis, label='Diagnósticos')
-    pharmacological_treatment = forms.CharField(max_length=100, required=False, label='Tratamiento farmacológico')
+    diagnoses_options = forms.ChoiceField(choices=diagnosis, label='Seleccionar diagnóstico/s')
+    diagnoses = forms.CharField(max_length=1000, label='Seleccionar diagnóstico/s', widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}))
+    pharma_options = forms.ChoiceField(choices=pharma, label='Seleccionar tratamiento/s')
+    pharmacological_treatment = forms.CharField(max_length=1000, label='Tratamiento farmacológico', widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}))
     prognosis = forms.CharField(max_length=100, required=False, label='Pronóstico')
     doctor_name = forms.CharField(max_length=50, required=False, label='Nombre del médico')
     medical_license = forms.CharField(max_length=10, required=False, label='Cédula médica')
@@ -321,6 +334,27 @@ class EvolutionNoteForm(forms.ModelForm):
             'glucose': 'Glucosa',
             'notes': 'Notas',
         }
+
+class EvolutionNoteForm(forms.Form):
+    id = forms.CharField(max_length=12, required=True)
+    date = forms.DateField(required=False, label='Fecha de registro')
+    name = forms.CharField(max_length=50, required=True, label='Nombre del paciente')
+    curp = forms.CharField(max_length=18, required=True, label='CURP')
+    service = forms.CharField(max_length=20, required=False, label='Servicio')
+    affiliation = forms.ChoiceField(choices=[], label='Derechohabiencia')
+    age = forms.CharField(max_length=3, required=False, label='Edad')
+    wight = forms.CharField(max_length=5, required=False, label='Peso')
+    height = forms.CharField(max_length=10, required=False, label='Altura')
+    heart_rate = forms.CharField(max_length=10, required=False, label='Frecuencia cardíaca')
+    respiratory_rate = forms.CharField(max_length=10, required=False, label='Frecuencia respiratoria')
+    blood_pressure = forms.CharField(max_length=10, required=False, label='Presión arterial')
+    temperature = forms.CharField(max_length=10, required=False, label='Temperatura corporal')
+    spo2 = forms.CharField(max_length=10, required=False, label='SPo2')
+    glucose = forms.CharField(max_length=10, required=False, label='Glucosa')
+    diagnoses_options = forms.ChoiceField(choices=diagnosis, label='Seleccionar diagnóstico/s')
+    diagnoses = forms.CharField(max_length=1000, label='Diagnósticos', widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}))
+    pharma_options = forms.ChoiceField(choices=pharma, label='Seleccionar tratamiento/s')
+    pharmacological_treatment = forms.CharField(max_length=1000, label='Tratamiento farmacológico', widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}))
         
 
 class IncapacityForm(forms.ModelForm):
@@ -365,7 +399,7 @@ class PrescriptionForm(forms.Form):
     respiratory_rate = forms.CharField(label='FR')
     oxygen_saturation = forms.CharField(label='SO2')
     alergies = forms.CharField(label='Alergias')
-    prescription = forms.CharField(label='Prescripción')
+    prescription = forms.CharField(max_length=1000, label='Prescripción', widget=forms.Textarea(attrs={'rows': 1, 'cols': 50}))
 
 class DoctorLoginForm(forms.Form):
     email = forms.EmailField()
