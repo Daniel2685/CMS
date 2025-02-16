@@ -1,9 +1,15 @@
+import os
+import re
+from django.conf import settings
 import datetime
 from datetime import timedelta, datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 import json
 import requests
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 from .models import MedicalHistory, EvolutionNote, Incapacity, Patient
 from .forms import (MedicalHistoryForm, RegisterScheduleForm, EvolutionNoteForm, IncapacityForm, DoctorLoginForm, LaboratoryRequisitionForm, PrescriptionForm, 
@@ -601,7 +607,183 @@ def provide_consultation(request):
         'doctor' : doc_test
     }
     return render(request, 'consultation.html', context)
+
+def process_incapacity(request):
+    pass 
+
+def print_incapacity(request):
+    incapacity_form = IncapacityForm(request.POST)
+    days = {
+        "1": "uno", "2": "dos", "3": "tres", "4": "cuatro", "5": "cinco", "6": "seis", "7": "siete", "8": "ocho", "9": "nueve", "10": "diez",
+        "11": "once", "12": "doce", "13": "trece", "14": "catorce", "15": "quince", "16": "dieciséis", "17": "diecisiete", "18": "dieciocho", "19": "diecinueve", "20": "veinte",
+        "21": "veintiuno", "22": "veintidós", "23": "veintitrés", "24": "veinticuatro", "25": "veinticinco", "26": "veintiséis", "27": "veintisiete", "28": "veintiocho", "29": "veintinueve", "30": "treinta",
+        "31": "treinta y uno", "32": "treinta y dos", "33": "treinta y tres", "34": "treinta y cuatro", "35": "treinta y cinco", "36": "treinta y seis", "37": "treinta y siete", "38": "treinta y ocho", "39": "treinta y nueve", "40": "cuarenta",
+        "41": "cuarenta y uno", "42": "cuarenta y dos", "43": "cuarenta y tres", "44": "cuarenta y cuatro", "45": "cuarenta y cinco", "46": "cuarenta y seis", "47": "cuarenta y siete", "48": "cuarenta y ocho", "49": "cuarenta y nueve", "50": "cincuenta",
+        "51": "cincuenta y uno", "52": "cincuenta y dos", "53": "cincuenta y tres", "54": "cincuenta y cuatro", "55": "cincuenta y cinco", "56": "cincuenta y seis", "57": "cincuenta y siete", "58": "cincuenta y ocho", "59": "cincuenta y nueve", "60": "sesenta",
+        "61": "sesenta y uno", "62": "sesenta y dos", "63": "sesenta y tres", "64": "sesenta y cuatro", "65": "sesenta y cinco", "66": "sesenta y seis", "67": "sesenta y siete", "68": "sesenta y ocho", "69": "sesenta y nueve", "70": "setenta",
+        "71": "setenta y uno", "72": "setenta y dos", "73": "setenta y tres", "74": "setenta y cuatro", "75": "setenta y cinco", "76": "setenta y seis", "77": "setenta y siete", "78": "setenta y ocho", "79": "setenta y nueve", "80": "ochenta",
+        "81": "ochenta y uno", "82": "ochenta y dos", "83": "ochenta y tres", "84": "ochenta y cuatro", "85": "ochenta y cinco", "86": "ochenta y seis", "87": "ochenta y siete", "88": "ochenta y ocho", "89": "ochenta y nueve", "90": "noventa",
+        "91": "noventa y uno", "92": "noventa y dos", "93": "noventa y tres", "94": "noventa y cuatro", "95": "noventa y cinco", "96": "noventa y seis", "97": "noventa y siete", "98": "noventa y ocho", "99": "noventa y nueve", "100": "cien"
+    }
+    if(incapacity_form.is_valid()):
+        response = HttpResponse(content_type="application/pdf")
+        #response["Content-Disposition"] = 'attachment; filename="INCAPACIDAD.pdf"'
+        incapacity = incapacity_form.cleaned_data
+        response["Content-Disposition"] = f'inline; filename="RECETA-{incapacity["patient_name"]}-{incapacity["date_of_record"]}.pdf"'
+        buffer = BytesIO()
+        date_obj1 = datetime.strptime(incapacity['start_incapacity'], "%Y-%m-%d")
+        date_obj2 = datetime.strptime(incapacity['end_incapacity'], "%Y-%m-%d")
+        new_date_str1 = date_obj1.strftime("%d-%m-%Y")
+        new_date_str2 = date_obj2.strftime("%d-%m-%Y")
+        print('Formulario válido')
+        MEDIA_CARTA_HORIZONTAL = (letter[0], letter[1] / 2)
+        pdf = canvas.Canvas(buffer, pagesize=MEDIA_CARTA_HORIZONTAL)
+        imagen_izquierda = os.path.join(settings.BASE_DIR, 'DOCTORS','static', 'media', 'logojpeg.jpg')
+        imagen_derecha = os.path.join(settings.BASE_DIR, 'DOCTORS','static', 'media', 'logo2jpeg.jpg')
+        img_width, img_height = 60, 60
+        pdf.drawImage(imagen_izquierda, 20, MEDIA_CARTA_HORIZONTAL[1] - img_height - 20, width=img_width, height=img_height)
+        pdf.drawImage(imagen_derecha, MEDIA_CARTA_HORIZONTAL[0] - img_width - 20, MEDIA_CARTA_HORIZONTAL[1] - img_height - 20, width=img_width, height=img_height)
+        titulo1 = "Universidad Autónoma del Estado de México"
+        pdf.setFont("Helvetica-Bold", 16)
+        titulo1_x = (MEDIA_CARTA_HORIZONTAL[0] - pdf.stringWidth(titulo1, "Helvetica-Bold", 16)) / 2
+        pdf.drawString(titulo1_x, MEDIA_CARTA_HORIZONTAL[1] - 40, titulo1)
+        titulo2 = "Clínica Multidisciplinaria de Salud"
+        pdf.setFont("Helvetica-Bold", 14)
+        titulo2_x = (MEDIA_CARTA_HORIZONTAL[0] - pdf.stringWidth(titulo2, "Helvetica-Bold", 14)) / 2
+        pdf.drawString(titulo2_x, MEDIA_CARTA_HORIZONTAL[1] - 60, titulo2)
+        subtitulo = "INCAPACIDAD"
+        pdf.setFont("Helvetica-Bold", 18) 
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 100, subtitulo) 
+        pdf.drawString(395, MEDIA_CARTA_HORIZONTAL[1] - 100, "FOLIO: 0000000000001")
+        pdf.setLineWidth(1.5)  # Grosor de la línea
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 110, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 110)  # Línea horizontal ajustada manualmente
+        # Agregar "fila" con los textos alineados
+        pdf.setFont("Helvetica-Bold", 12)  # Tamaño estándar
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 125, f"Servicio: {incapacity['service']}")
+        pdf.drawString(480, MEDIA_CARTA_HORIZONTAL[1] - 125, f"Fecha: {incapacity['date_of_record']}")
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 140, f"Días autorizados: {incapacity['total_days']} ({days[incapacity['total_days']]})")
+        pdf.drawString(250, MEDIA_CARTA_HORIZONTAL[1] - 140, f"A partir del: {new_date_str1}")
+        pdf.drawString(470, MEDIA_CARTA_HORIZONTAL[1] - 140, f"Hasta el: {new_date_str2}")
+        # Agregar línea divisoria debajo del subtítulo
+        pdf.setLineWidth(1.5)  # Grosor de la línea
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 150, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 150)  # Línea horizontal ajustada manualmente
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 165, f"Nombre del/la solicitante: {incapacity['patient_name']}")
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 180, f"Adscrit@ a: {incapacity['assigned_to']}")
+        pdf.drawString(300, MEDIA_CARTA_HORIZONTAL[1] - 180, f"Afiliación: {incapacity['affiliation']}")
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 195, "Diagnóstico/s:") #85 caracteres para hacer salto de línea (hacerlo con un for)
+        clean_text = re.sub(r'\r?\n', ' ', incapacity['diagnoses'])
+        salto = 210
+        for i in range(0, len(clean_text), 95):
+            text_segment = clean_text[i:i+95]
+            pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - salto, text_segment)
+            salto += 10
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 300, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 300)
+        pdf.setFont("Helvetica-Bold", 10)  # Tamaño estándar
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 315, f"Nombre del/la medic@: {incapacity['doctor_name']}") #85 caracteres para hacer salto de línea
+        pdf.drawString(350, MEDIA_CARTA_HORIZONTAL[1] - 315, f"Clave: {incapacity['key']}") #85 caracteres para hacer salto de línea
+        pdf.drawString(470, MEDIA_CARTA_HORIZONTAL[1] - 315, "Firma: ") #85 caracteres para hacer salto de línea
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 345, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 345)
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 360, "Directora: Dra. Ana Laura Guadarrama López") #85 caracteres para hacer salto de línea
+        pdf.drawString(350, MEDIA_CARTA_HORIZONTAL[1] - 360, "Clave: 123456") #85 caracteres para hacer salto de línea
+        pdf.drawString(470, MEDIA_CARTA_HORIZONTAL[1] - 360, "Firma: ") #85 caracteres para hacer salto de línea
+        pdf.setFont("Helvetica-Bold", 6)  # Tamaño más pequeño si lo deseas
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 390, "Secretaría de Extensión y Vinculación") #85 caracteres para hacer salto de línea
+        pdf.drawString(470, MEDIA_CARTA_HORIZONTAL[1] - 390, "Fábrica de Software, U.A.P. Tianguistenco") 
+        pdf.showPage()
+        pdf.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+        response.write(pdf)
+        return response
+    else:
+        print('Formulario invalido')
     
+
+def print_prescription(request):
+    print('imprimir receta')
+    prescription_form = PrescriptionForm(request.POST)
+    if(prescription_form.is_valid()):
+        prescription = prescription_form.cleaned_data
+        response = HttpResponse(content_type="application/pdf")
+        #response["Content-Disposition"] = f'attachment; filename="RECETA-{prescription["patient_name"]}-{prescription["date_of_record"]}.pdf"'
+        response["Content-Disposition"] = f'inline; filename="RECETA-{prescription["patient_name"]}-{prescription["date_of_record"]}.pdf"'
+        #response["Content-Disposition"] = 'inline; filename="RECETA.pdf"'
+        buffer = BytesIO()
+        
+        print(prescription)
+        MEDIA_CARTA_HORIZONTAL = (letter[0], letter[1] / 2)
+        pdf = canvas.Canvas(buffer, pagesize=MEDIA_CARTA_HORIZONTAL)
+        imagen_izquierda = os.path.join(settings.BASE_DIR, 'DOCTORS','static', 'media', 'logojpeg.jpg')
+        imagen_derecha = os.path.join(settings.BASE_DIR, 'DOCTORS','static', 'media', 'logo2jpeg.jpg')
+        img_width, img_height = 60, 60
+        pdf.drawImage(imagen_izquierda, 20, MEDIA_CARTA_HORIZONTAL[1] - img_height - 20, width=img_width, height=img_height)
+        pdf.drawImage(imagen_derecha, MEDIA_CARTA_HORIZONTAL[0] - img_width - 20, MEDIA_CARTA_HORIZONTAL[1] - img_height - 20, width=img_width, height=img_height)
+        titulo1 = "Universidad Autónoma del Estado de México"
+        pdf.setFont("Helvetica-Bold", 16)
+        titulo1_x = (MEDIA_CARTA_HORIZONTAL[0] - pdf.stringWidth(titulo1, "Helvetica-Bold", 16)) / 2
+        pdf.drawString(titulo1_x, MEDIA_CARTA_HORIZONTAL[1] - 40, titulo1)
+        titulo2 = "Clínica Multidisciplinaria de Salud"
+        pdf.setFont("Helvetica-Bold", 14)  
+        titulo2_x = (MEDIA_CARTA_HORIZONTAL[0] - pdf.stringWidth(titulo2, "Helvetica-Bold", 14)) / 2
+        pdf.drawString(titulo2_x, MEDIA_CARTA_HORIZONTAL[1] - 60, titulo2)  
+        pdf.setFont("Helvetica-Bold", 10)  
+        pdf.setLineWidth(0.5)  # Grosor de la línea
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 85, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 85)
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 95, f"Nombre: {prescription['patient_name']}")
+        pdf.drawString(350, MEDIA_CARTA_HORIZONTAL[1] - 95, f"Temperatura: {prescription['temperature']}°C")
+        pdf.drawString(450, MEDIA_CARTA_HORIZONTAL[1] - 95, f"Edad: {prescription['age']}")
+        pdf.drawString(505, MEDIA_CARTA_HORIZONTAL[1] - 95, f"Fecha: {prescription['date_of_record']}")
+        #
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 106, f"Peso: {prescription['weight']}kg")
+        pdf.drawString(95, MEDIA_CARTA_HORIZONTAL[1] - 106, f"Talla: {prescription['height']}m")
+        pdf.drawString(170, MEDIA_CARTA_HORIZONTAL[1] - 106, f"IMC: {prescription['bmi']}kg/m²")
+        pdf.drawString(250, MEDIA_CARTA_HORIZONTAL[1] - 106, f"T.A.: {prescription['blood_pressure']}mmHg")
+        pdf.drawString(340, MEDIA_CARTA_HORIZONTAL[1] - 106, f"F.C.: {prescription['heart_rate']}lpm")
+        pdf.drawString(410, MEDIA_CARTA_HORIZONTAL[1] - 106, f"F.V.: {prescription['ventricullar_fibrillation']}Hz")
+        pdf.drawString(480, MEDIA_CARTA_HORIZONTAL[1] - 106, f"F.R.: {prescription['respiratory_rate']}rpm")
+        pdf.drawString(545, MEDIA_CARTA_HORIZONTAL[1] - 106, f"SO2: {prescription['oxygen_saturation']}%")
+        
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 110, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 110)
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 120, "Alergias: ")
+        clean_allergies = re.sub(r'\r?\n', ' ', prescription['allergies'])
+        salto = 135
+        for i in range(0, len(clean_allergies), 115):
+            text_segment = clean_allergies[i:i+115]
+            pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - salto, text_segment)
+            salto += 10
+
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 150, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 150) 
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 160, "Diagnósticos: ")
+        clean_diagnoses = re.sub(r'\r?\n', ' ', prescription['diagnoses'])
+        salto = 175
+        for i in range(0, len(clean_diagnoses), 115):
+            text_segment = clean_diagnoses[i:i+115]
+            pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - salto, text_segment)
+            salto += 10
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 240, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 240)
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 250, "Tratamiento farmacológico:")
+        clean_pharma = re.sub(r'\r?\n', ' ', prescription['prescription'])
+        salto = 265
+        for i in range(0, len(clean_pharma), 115):
+            text_segment = clean_pharma[i:i+115]
+            pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - salto, text_segment)
+            salto += 10
+        pdf.line(20, MEDIA_CARTA_HORIZONTAL[1] - 360, MEDIA_CARTA_HORIZONTAL[0] - 20, MEDIA_CARTA_HORIZONTAL[1] - 360)
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 370, "Nombre del/la medic@: María González Gutiérrez") 
+        pdf.drawString(350, MEDIA_CARTA_HORIZONTAL[1] - 370, "Clave: 123456") 
+        pdf.drawString(470, MEDIA_CARTA_HORIZONTAL[1] - 370, "Firma: ") 
+        pdf.setFont("Helvetica-Bold", 6)
+        pdf.drawString(20, MEDIA_CARTA_HORIZONTAL[1] - 390, "Jesús Carranza 205, Colonia Universidad, C.P. 50120, Toluca, Estado de México.") #85 caracteres para hacer salto de línea
+        pdf.drawString(470, MEDIA_CARTA_HORIZONTAL[1] - 390, "Fábrica de Software, U.A.P. Tianguistenco") 
+        pdf.showPage()
+        pdf.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+        response.write(pdf)
+        print('se termino el pdf')
+        return response
+    else:
+        pass
     
 
 def process_medical_history(request):

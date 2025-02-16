@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const pharmaSelected = pharmaSelectedList[index]; 
 
                 // Actualizamos el campo pharmacological_treatment seleccionado con el texto correspondiente
-                pharmaSelected.value += selectedOption.text + '\n'; // Si es un textarea
+                pharmaSelected.value += selectedOption.text + '    \n'; // Si es un textarea
 
                 // Llamamos a la función para ajustar el número de filas
                 adjustTextareaHeight(pharmaSelected);

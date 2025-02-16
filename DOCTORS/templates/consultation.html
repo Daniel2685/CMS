@@ -35,7 +35,7 @@
             </a>
             <a href="#" onclick="showContent('panel5')">
                 <img class="logo" src="{% static 'media/laboratorio.png' %}" alt="Solicitud de laboratorio logo" />
-                <p>Solicitud de laboratorio</p>
+                <p>Solicitud de laboratorio y de gabinete</p>
             </a>
             <a href="#" onclick="showContent('panel6')">
                 <img class="logo" src="{% static 'media/file.png' %}" alt="Solicitud de laboratorio logo" />
@@ -92,12 +92,12 @@
             <!--AQUÍ VA EL CÓDIGO PARA LA RECETA-->
             <div id="panel3" class="tab-content">
                 <p class="title">Receta</p>
-                <form method="post" action="{% url 'process_prescription' %}">
+                <form method="post" action="{% url 'print_prescription' %}">
                     {% csrf_token %}
                     {{ prescription_form.as_p }}
                     <!-- Contenedor para los botones -->
                     <div class="form-actions">
-                        <button type="button" class="print-button" title="Imprimir">
+                        <button type="submit" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>
@@ -107,15 +107,12 @@
             <!--AQUÍ VA EL CÓDIGO PARA LA INCAPACIDAD-->
             <div id="panel4" class="tab-content">
                 <p class="title">Incapacidad</p>
-                <form action="{% url 'process_incapacity' %}" method="post">
+                <form action="{% url 'print_incapacity' %}" method="post">
                     {% csrf_token %}
                     {{ incapacity_form.as_p }}
                     <!-- Contenedor para los botones -->
                     <div class="form-actions">
-                        <button type="submit" id="save-button" title="Guardar">
-                            <img src="{% static 'media/save.png' %}" class="icon-print">
-                        </button>
-                        <button type="button" class="print-button" title="Imprimir">
+                        <button type="submit" title="Imprimir">
                             <img src="{% static 'media/print.png' %}" class="icon-print">
                         </button>
                     </div>
@@ -152,5 +149,7 @@
     <script src="{% static 'scripts/print.js' %}"></script>
     <script src="{% static 'scripts/diagnoses.js' %}"></script>
     <script src="{% static 'scripts/pharma.js' %}"></script>
+    <script src="{% static 'scripts/date.js' %}"></script>
+    <script src="{% static 'scripts/dates.js' %}"></script>
 </body>
 </html>

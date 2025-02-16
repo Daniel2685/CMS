@@ -20,6 +20,8 @@ urlpatterns = [
     path('process_medical_history', views.process_medical_history, name='process_medical_history'),
     path('process_evolution_note', views.process_evolution_note, name='process_evolution_note'),
     path('process_incapacity', views.process_incapacity, name='process_incapacity'),
+    path('print_incapacity', views.print_incapacity, name='print_incapacity'),
+    path('print_prescription', views.print_prescription, name='print_prescription'),
     path('process_laboratory_requisition', views.process_laboratory_requisition, name='process_laboratory_requisition'),
     path('process_prescription', views.process_prescription, name='process_prescription'),
 ]

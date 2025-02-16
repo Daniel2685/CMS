@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const diagnosisSelected = diagnosisSelectedList[index]; 
 
                 // Actualizamos el campo diagnosis seleccionado con el texto correspondiente
-                diagnosisSelected.value += selectedOption.text + '\n'; // Si es un textarea
+                diagnosisSelected.value += selectedOption.text + '    \n'; // Si es un textarea
 
                 // Llamamos a la función para ajustar el número de filas
                 adjustTextareaHeight(diagnosisSelected);

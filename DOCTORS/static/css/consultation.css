@@ -205,27 +205,6 @@ form {
 }
 
 
-input[name="id"], 
-input[name="date_of_record"], 
-input[name="time_of_record"],
-input[name="date"]
-/*input[name="age"],
-input[name="gender"],
-input[name="temperature"], 
-input[name="weight"],
-input[name="height"],
-input[name="bmi"],
-input[name="systolic_blood_pressure"],
-input[name="diastolic_blood_pressure"],
-input[name="blood_pressure"],
-input[name="respiratory_rate"],
-input[name="heart_rate"]*/ {
-    width: 150px; /* Ajusta el ancho */
-    
-}
-
-
-
 
 /* Textarea modificada para que se expanda solo hacia abajo */
 textarea[name="family_medical_history"], 
@@ -404,4 +383,8 @@ button.save-btn:hover {
 
 .icon-print {
     width: 20px;
+}
+
+#id_physical, #id_history, #id_interrogatory{
+    display: none;
 }
